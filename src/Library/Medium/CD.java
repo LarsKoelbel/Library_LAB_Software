@@ -1,8 +1,10 @@
 package Library.Medium;
 
+import Library.bib_tex.BibTexException;
 import Library.bib_tex.BibTexParameter;
 import Library.bib_tex.BibTexStruct;
-import Library.io.Communication;
+import Library.bib_tex.BibTexType;
+import Library.io.ProcessOutputBuffer;
 import Library.io.Severity;
 
 /**
@@ -13,6 +15,14 @@ import Library.io.Severity;
 public class CD extends Medium{
     private String lable = null;
     private String artist = null;
+    // New
+    private double durationInMinutes = -1;
+    private String agePolicy = null;
+
+    public CD()
+    {
+        super.setType(BibTexType.CD);
+    }
 
     public String getLable() {
         return lable;
@@ -32,6 +42,22 @@ public class CD extends Medium{
         return this;
     }
 
+    public double getDurationInMinutes() {
+        return durationInMinutes;
+    }
+
+    public void setDurationInMinutes(double _durationInMinutes) {
+        this.durationInMinutes = _durationInMinutes;
+    }
+
+    public String getAgePolicy() {
+        return agePolicy;
+    }
+
+    public void setAgePolicy(String _agePolicy) {
+        this.agePolicy = _agePolicy;
+    }
+
     /**
      * Methode is used to get a string representation of the storage medium
      * @return String representation
@@ -40,18 +66,23 @@ public class CD extends Medium{
     public String generateRepresentation()
     {
         StringBuilder sp = new StringBuilder();
+        sp.append("Inventory ID: ").append(getInventoryID()).append("\n");
         sp.append("Title: ").append(getTitle()).append("\n");
-        sp.append("Lable: ").append(getLable()).append("\n");
-        sp.append("Artist: ").append(getArtist());
-
+        sp.append("Status: ").append(getStatus()).append("\n");
+        sp.append("Date of Return: ").append(getDateOfReturn() != null ? getDateOfReturn() : "N/A").append("\n");
+        sp.append("Label: ").append(getLable()).append("\n");
+        sp.append("Artist: ").append(getArtist()).append("\n");
+        sp.append("Duration (minutes): ").append(getDurationInMinutes()).append("\n");
+        sp.append("Age Policy: ").append(getAgePolicy());
         return sp.toString();
     }
 
     /**
      * Parse values from a BibTex struct object
      * @param _bibTexStruct BibTex struct to parse from
+     * @param _out Output buffer for the process
      */
-    public CD parseFromBibTexStruct(BibTexStruct _bibTexStruct)
+    public CD parseFromBibTexStruct(BibTexStruct _bibTexStruct, ProcessOutputBuffer _out)
     {
         for (BibTexParameter bibTexParameter : _bibTexStruct.getParameterList())
         {
@@ -59,10 +90,33 @@ public class CD extends Medium{
                 case "title" -> setTitle(bibTexParameter.getSvalue());
                 case "label" -> setLable(bibTexParameter.getSvalue());
                 case "artist" -> setArtist(bibTexParameter.getSvalue());
-                default -> Communication.writeToProcessOutputBuffer("bib-tex-parser","Parameter " + bibTexParameter.getName() + " is not available for type CD", Severity.WARNING);
+                case "duration" -> setDurationInMinutes(bibTexParameter.getFvalue());
+                case "agepolicy" -> setAgePolicy(bibTexParameter.getSvalue());
+                default -> _out.write("Parameter " + bibTexParameter.getName() + " is not available for type CD", Severity.WARNING);
 
             }
         }
+
+        // Check if all the parameters are met
+        if (this.getTitle() == null || this.getTitle().isEmpty())
+            throw new BibTexException("Incomplete parameter exception",
+                    "Medium can not be created. The parameter 'title' is missing or empty.");
+
+        if (this.lable == null || this.lable.isEmpty())
+            throw new BibTexException("Incomplete parameter exception",
+                    "Medium can not be created. The parameter 'label' is missing or empty.");
+
+        if (this.artist == null || this.artist.isEmpty())
+            throw new BibTexException("Incomplete parameter exception",
+                    "Medium can not be created. The parameter 'artist' is missing or empty.");
+
+        if (this.durationInMinutes < 0)
+            throw new BibTexException("Incomplete parameter exception",
+                    "Medium can not be created. The parameter 'duration' is missing or empty.");
+
+        if (this.agePolicy == null || this.agePolicy.isEmpty())
+            throw new BibTexException("Incomplete parameter exception",
+                    "Medium can not be created. The parameter 'agePolicy' is missing or empty.");
 
         return this;
     }

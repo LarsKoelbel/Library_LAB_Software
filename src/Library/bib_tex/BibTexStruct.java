@@ -1,5 +1,7 @@
 package Library.bib_tex;
 
+import Library.io.ProcessOutputBuffer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +17,10 @@ public class BibTexStruct {
     /**
      * Parse the dta of the bibtex struct from a string
      * @param _input String query to parse
+     * @param _out Output buffer for the process
      * @return The struct itself for chained calls
      */
-    public BibTexStruct parseFromString(String _input)
+    public BibTexStruct parseFromString(String _input, ProcessOutputBuffer _out)
     {
         int absoluteParsePosition = 0;
 

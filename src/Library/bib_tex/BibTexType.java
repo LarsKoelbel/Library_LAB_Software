@@ -8,5 +8,6 @@ public enum BibTexType {
     BOOK,
     JOURNAL,
     CD,
-    EL_MED
+    EL_MED,
+    MEDIUM
 }

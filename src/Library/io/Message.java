@@ -37,6 +37,7 @@ public class Message {
     @Override
     public String toString()
     {
-        return this.message;
+
+        return "---- Message=" + timestamp + "\n" + this.message + "\n-----------------\n";
     }
 }
