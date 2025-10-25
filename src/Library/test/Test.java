@@ -21,7 +21,7 @@ public class Test {
      */
     public static void main(String[] argv)
     {
-        test_Searching();
+        test_Persistency();
     }
 
 

@@ -6,9 +6,11 @@ package Library.io;
  */
 public enum Severity {
     BASIC(0),
-    WARNING(1),
-    ERROR(2),
-    FATAL(3);
+    SUCCESS(1),
+    REMARK(2),
+    WARNING(3),
+    ERROR(4),
+    FATAL(5);
 
     private int level;
     private static final int HIGHEST_SEVERITY = 3;

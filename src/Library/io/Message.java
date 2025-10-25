@@ -30,6 +30,11 @@ public class Message {
         return this.timestamp;
     }
 
+    public Message setTimestamp(long _timestamp) {
+        this.timestamp = _timestamp;
+        return this;
+    }
+
     /**
      * To string methode gets the content of the message
      * @return Message content
@@ -37,7 +42,6 @@ public class Message {
     @Override
     public String toString()
     {
-
-        return "---- Message=" + timestamp + "\n" + this.message + "\n-----------------\n";
+        return this.message;
     }
 }

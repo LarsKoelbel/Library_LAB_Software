@@ -21,6 +21,16 @@ public class Collection implements Iterable<Medium>, Serializable {
     private final ArrayList<Medium> libList = new ArrayList<>();
     private boolean SORTED = false;
 
+    public int length()
+    {
+        return libList.size();
+    }
+
+    public boolean isEmpty()
+    {
+        return length() <= 0;
+    }
+
     /**
      * Get the next available id for the medium
      * @return ID
@@ -187,13 +197,17 @@ public class Collection implements Iterable<Medium>, Serializable {
             {
                 if(_dropAll)
                 {
-                    for (Medium me : m) libList.remove(me);
+                    for (Medium me : m){
+                        libList.remove(me);
+                        _out.write("Removed medium of id: " + me.getInventoryID(), Severity.SUCCESS);
+                    }
+                    return true;
                 }
                 else throw new DuplicateEntryException("Multiple titles for delete", Arrays.toString(m));
             }else
             {
                 libList.remove(m[0]);
-                _out.write("Removed medium of title: " + m[0].getTitle());
+                _out.write("Removed medium of title: " + m[0].getTitle(), Severity.SUCCESS);
                 SORTED = false;
                 return true;
             }
@@ -214,8 +228,10 @@ public class Collection implements Iterable<Medium>, Serializable {
         if (m != null)
         {
             libList.remove(m);
+            _out.write("Removed medium of id: " + _id, Severity.SUCCESS);
+            return true;
         }
-        _out.write("Medium not found: " + _id, Severity.ERROR);
+        _out.write("Medium of this id not found: " + _id, Severity.ERROR);
         return false;
     }
 
@@ -225,6 +241,29 @@ public class Collection implements Iterable<Medium>, Serializable {
     public void sort()
     {
         sort(false);
+    }
+
+    /**
+     * Merge another collection into this one
+     * @param other Other collection
+     */
+    public void merge(Collection other)
+    {
+        if (other.isEmpty()) return;
+        for(Medium m : other)
+        {
+            libList.add(m);
+        }
+        SORTED = false;
+        sort();
+    }
+
+    /**
+     * Clear the collection completely
+     */
+    public void clear()
+    {
+        libList.clear();
     }
 
     /**
@@ -264,4 +303,5 @@ public class Collection implements Iterable<Medium>, Serializable {
             return libList.get(index++);
         }
     }
+
 }

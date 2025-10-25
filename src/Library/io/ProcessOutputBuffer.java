@@ -1,6 +1,7 @@
 package Library.io;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -89,6 +90,20 @@ public class ProcessOutputBuffer {
     }
 
     /**
+     * Replace the buffer with the messages from another buffer
+     * @param other Other buffer
+     */
+    public void replace(ProcessOutputBuffer other)
+    {
+
+        buffer.clear();
+
+        if(!other.hasMessages()) return;
+
+        buffer.addAll(Arrays.asList(other.getAll()));
+    }
+
+    /**
      * Get a complete string representation of the buffer
      * @return String representation
      */
@@ -105,4 +120,13 @@ public class ProcessOutputBuffer {
 
         return sb.toString();
     }
+
+    public void setProcessName(String _name) {
+        this.name = _name;
+    }
+
+    public String getProcessName() {
+        return name;
+    }
+
 }
