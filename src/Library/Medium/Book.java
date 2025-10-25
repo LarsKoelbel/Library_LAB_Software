@@ -1,20 +1,19 @@
 package Library.Medium;
 
-import Library.bib_tex.BibTexException;
-import Library.bib_tex.BibTexType;
+import Library.bib_tex.*;
 import Library.io.ProcessOutputBuffer;
 import Library.utils.ISBNUtils;
-import Library.bib_tex.BibTexParameter;
-import Library.bib_tex.BibTexStruct;
 import Library.io.Communication;
 import Library.io.Severity;
+
+import java.io.Serializable;
 
 /**
  * This class is used to represent a paper (newspaper) storage medium
  * @author lkoelbel
  * @matnr 21487
  */
-public class Book extends Medium{
+public class Book extends Medium implements Serializable {
     private int yearOfPublishing = 0;
     private String publicher = null;
     private String ISBN = null;
@@ -115,6 +114,47 @@ public class Book extends Medium{
         sp.append("Edition: ").append(getEdition()).append("\n");
         sp.append("Pages: ").append(getPages());
         return sp.toString();
+    }
+
+    /**
+     * Get a bibtex struct of the object
+     * @return the BibTexStruct
+     */
+    @Override
+    public BibTexStruct getBibtex()
+    {
+        BibTexStruct bibTex = new BibTexStruct();
+        bibTex.init().setType(BibTexType.BOOK)
+                .addParameter(new BibTexParameter()
+                        .setName("Author")
+                        .setSvalue(getWriter())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Title")
+                        .setSvalue(getTitle())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Publisher")
+                        .setSvalue(getPublicher())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Year")
+                        .setFvalue((double) getYearOfPublishing())
+                        .setType(BibTexParameterType.NUMERIC_VALUE))
+                .addParameter(new BibTexParameter()
+                        .setName("ISBN")
+                        .setSvalue(getISBN())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Edition")
+                        .setSvalue(getEdition())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Pages")
+                        .setFvalue((double) getPages())
+                        .setType(BibTexParameterType.NUMERIC_VALUE));
+
+        return bibTex;
     }
 
     /**

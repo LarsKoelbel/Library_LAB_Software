@@ -1,20 +1,19 @@
 package Library.Medium;
 
-import Library.bib_tex.BibTexException;
-import Library.bib_tex.BibTexType;
+import Library.bib_tex.*;
 import Library.io.ProcessOutputBuffer;
 import Library.utils.URLUtils;
-import Library.bib_tex.BibTexParameter;
-import Library.bib_tex.BibTexStruct;
 import Library.io.Communication;
 import Library.io.Severity;
+
+import java.io.Serializable;
 
 /**
  * This class is used to represent an electronic storage medium
  * @author lkoelbel
  * @matnr 21487
  */
-public class ElectronicalMedium extends Medium{
+public class ElectronicalMedium extends Medium implements Serializable {
     private String url = null;
     // New
     private String dataFormat = null;
@@ -86,6 +85,35 @@ public class ElectronicalMedium extends Medium{
         sp.append("Size (bytes): ").append(getSizeInBytes());
         return sp.toString();
     }
+
+    /**
+     * Get a bibtex struct of the object
+     * @return the BibTexStruct
+     */
+    @Override
+    public BibTexStruct getBibtex() {
+        BibTexStruct bibTex = new BibTexStruct();
+        bibTex.init().setType(BibTexType.EL_MED)
+                .addParameter(new BibTexParameter()
+                        .setName("Title")
+                        .setSvalue(getTitle())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("URL")
+                        .setSvalue(getURL())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("DataFormat")
+                        .setSvalue(getDataFormat())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Size")
+                        .setFvalue((double) getSizeInBytes())
+                        .setType(BibTexParameterType.NUMERIC_VALUE));
+
+        return bibTex;
+    }
+
 
     /**
      * Parse values from a BibTex struct object

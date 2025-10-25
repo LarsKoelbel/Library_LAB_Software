@@ -8,16 +8,16 @@ import Library.io.Communication;
 import Library.io.IExceptionUserReadable;
 import Library.io.ProcessOutputBuffer;
 import Library.io.Severity;
+import Library.utils.DuplicateEntryException;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Main class for the management of all the entries in the library
  * @author lkoebel 21487
  */
-public class Collection implements Iterable<Medium>{
+public class Collection implements Iterable<Medium>, Serializable {
     private final ArrayList<Medium> libList = new ArrayList<>();
     private boolean SORTED = false;
 
@@ -70,18 +70,10 @@ public class Collection implements Iterable<Medium>{
             Medium m = BibTexParser.parseFromBibTexString(_bibTex, _out);
             m.setInventoryID(getNextID());
             m.setStatus(Status.AVAILABLE);
-            if (checkIfTitleFree(m.getTitle()))
-            {
-                libList.add(m);
-                SORTED = false;
-                sort();
-                return true;
-            }
-            else
-            {
-                _out.write("Title is already taken by another medium: " + m.getTitle(), Severity.ERROR);
-                return false;
-            }
+            libList.add(m);
+            SORTED = false;
+            sort();
+            return true;
 
 
         } catch (Exception e)
@@ -99,20 +91,63 @@ public class Collection implements Iterable<Medium>{
     }
 
     /**
-     * Find a medium by title
+     * Find a mediums by title
+     * @param _title Title
+     * @param _out Process output buffer
+     * @param _reverse Reverse the list
+     * @return The medium or null
+     */
+    public Medium[] findMedium(String _title, ProcessOutputBuffer _out, boolean _reverse)
+    {
+        ArrayList<Medium> mediumList = new ArrayList<>();
+
+        for (Medium m : libList)
+        {
+            if (m.getTitle().equalsIgnoreCase(_title)) mediumList.add(m);
+        }
+
+        if (mediumList.isEmpty())
+        {
+            _out.write("Title could not be found", Severity.ERROR);
+
+            return null;
+        }
+
+        mediumList.sort(Comparator.comparing(Medium::getTitle).thenComparingInt(m -> m.getType().getSortLevel()));
+
+        if (_reverse) Collections.reverse(mediumList);
+
+        return mediumList.toArray(new Medium[0]);
+    }
+
+    /**
+     * Find a mediums by id
+     * @param _id ID if the medium
+     * @param _out Process output buffer
+     * @return The medium or null
+     */
+    public Medium findMedium(long _id, ProcessOutputBuffer _out)
+    {
+
+        for (Medium m : libList)
+        {
+            if (m.getInventoryID() == _id) return m;
+        }
+
+        _out.write("ID could not be found", Severity.ERROR);
+
+        return null;
+    }
+
+    /**
+     * Find a mediums by title
      * @param _title Title
      * @param _out Process output buffer
      * @return The medium or null
      */
-    public Medium findMedium(String _title, ProcessOutputBuffer _out)
+    public Medium[] findMedium(String _title, ProcessOutputBuffer _out)
     {
-        for (Medium m : libList)
-        {
-            if (m.getTitle().equalsIgnoreCase(_title)) return m;
-        }
-        _out.write("Title could not be found", Severity.ERROR);
-
-        return null;
+        return findMedium(_title, _out, false);
     }
 
     /**
@@ -126,22 +161,61 @@ public class Collection implements Iterable<Medium>{
     }
 
     /**
-     * Remove a new medium to the library
+     * Remove a medium from the library
      * @param _title Title of the medium
      * @param _out Process output buffer
      * @return Success status
      */
     public boolean dropMedium(String _title, ProcessOutputBuffer _out)
     {
-        Medium m = findMedium(_title, Communication.NULL_BUFFER);
+        return dropMedium(_title, _out, false);
+    }
+
+    /**
+     * Remove a medium from the library
+     * @param _title Title of the medium
+     * @param _out Process output buffer
+     * @param _dropAll If multiple are found, drop all
+     * @return Success status
+     */
+    public boolean dropMedium(String _title, ProcessOutputBuffer _out, boolean _dropAll)
+    {
+        Medium[] m = findMedium(_title, Communication.NULL_BUFFER);
+        if (m != null)
+        {
+            if (m.length > 1)
+            {
+                if(_dropAll)
+                {
+                    for (Medium me : m) libList.remove(me);
+                }
+                else throw new DuplicateEntryException("Multiple titles for delete", Arrays.toString(m));
+            }else
+            {
+                libList.remove(m[0]);
+                _out.write("Removed medium of title: " + m[0].getTitle());
+                SORTED = false;
+                return true;
+            }
+        }
+        _out.write("Medium not found: " + _title, Severity.ERROR);
+        return false;
+    }
+
+    /**
+     * Remove a medium from the library
+     * @param _id ID of the medium
+     * @param _out Process output buffer
+     * @return Success status
+     */
+    public boolean dropMedium(long _id, ProcessOutputBuffer _out)
+    {
+        Medium m = findMedium(_id, Communication.NULL_BUFFER);
         if (m != null)
         {
             libList.remove(m);
-            _out.write("Removed medium of title: " + m.getTitle());
-            SORTED = false;
-            return true;
         }
-        _out.write("Medium not found: " + _title, Severity.ERROR);
+        _out.write("Medium not found: " + _id, Severity.ERROR);
         return false;
     }
 
@@ -150,10 +224,20 @@ public class Collection implements Iterable<Medium>{
      */
     public void sort()
     {
+        sort(false);
+    }
+
+    /**
+     * Sort the libList
+     * @param _reverse Reverse the list
+     */
+    public void sort(boolean _reverse)
+    {
         if (!SORTED) {
             libList.sort(Medium::compareTo);
             SORTED = true;
         }
+        if (_reverse) Collections.reverse(libList);
     }
 
     @Override

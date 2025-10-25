@@ -1,0 +1,212 @@
+---- Short ----
+Inventory ID: 9 | Title: ACM Computing Surveys | Type: JOURNAL | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 11 | Title: Back in Black | Type: CD | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 16 | Title: Coursera | Type: EL_MED | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 1 | Title: Data Structures and Algorithms | Type: BOOK | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 5 | Title: Database Systems | Type: BOOK | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 3 | Title: Deep Learning with Python | Type: BOOK | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 13 | Title: Hotel California | Type: CD | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 10 | Title: IEEE Transactions on Robotics | Type: JOURNAL | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 2 | Title: Introduction to Machine Learning | Type: BOOK | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 6 | Title: Journal of AI Research | Type: JOURNAL | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 20 | Title: Khan Academy | Type: EL_MED | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 15 | Title: Led Zeppelin IV | Type: CD | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 19 | Title: MIT OCW | Type: EL_MED | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 8 | Title: Nature Neuroscience | Type: JOURNAL | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 4 | Title: Operating Systems Explained | Type: BOOK | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 12 | Title: Rumours | Type: CD | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 7 | Title: Science Advances | Type: JOURNAL | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 18 | Title: Stanford Online | Type: EL_MED | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 14 | Title: The Dark Side of the Moon | Type: CD | Status: AVAILABLE | Date of return: N/A | 
+Inventory ID: 17 | Title: edX | Type: EL_MED | Status: AVAILABLE | Date of return: N/A | 
+---- Long ----
+Inventory ID: 9
+Title: ACM Computing Surveys
+Status: AVAILABLE
+Date of Return: N/A
+ISSN: 0360-0300
+Volume: 50
+Number: 4
+Edition: third
+Pages: 320
+
+Inventory ID: 11
+Title: Back in Black
+Status: AVAILABLE
+Date of Return: N/A
+Label: Albert Productions
+Artist: AC/DC
+Duration (minutes): 41.5
+Age Policy: all ages
+
+Inventory ID: 16
+Title: Coursera
+Status: AVAILABLE
+Date of Return: N/A
+URL: https://www.coursera.org
+Data Format: HTML Website
+Size (bytes): 5120
+
+Inventory ID: 1
+Title: Data Structures and Algorithms
+Status: AVAILABLE
+Date of Return: N/A
+Year of publishing: 2015
+Publisher: TechPress, Berlin
+ISBN: 978-3-16-148410-0
+Author: Alice Weber
+Edition: first
+Pages: 520
+
+Inventory ID: 5
+Title: Database Systems
+Status: AVAILABLE
+Date of Return: N/A
+Year of publishing: 2020
+Publisher: Data Press, Cologne
+ISBN: 978-3-16-148410-0
+Author: Clara Bauer
+Edition: second
+Pages: 480
+
+Inventory ID: 3
+Title: Deep Learning with Python
+Status: AVAILABLE
+Date of Return: N/A
+Year of publishing: 2021
+Publisher: AI Publications, Hamburg
+ISBN: 978-3-16-148410-0
+Author: Maria Fischer
+Edition: first
+Pages: 350
+
+Inventory ID: 13
+Title: Hotel California
+Status: AVAILABLE
+Date of Return: N/A
+Label: Asylum Records
+Artist: Eagles
+Duration (minutes): 43.2
+Age Policy: all ages
+
+Inventory ID: 10
+Title: IEEE Transactions on Robotics
+Status: AVAILABLE
+Date of Return: N/A
+ISSN: 1552-3098
+Volume: 37
+Number: 6
+Edition: first
+Pages: 250
+
+Inventory ID: 2
+Title: Introduction to Machine Learning
+Status: AVAILABLE
+Date of Return: N/A
+Year of publishing: 2019
+Publisher: ML Books, Munich
+ISBN: 978-3-16-148410-0
+Author: John Schmidt
+Edition: second
+Pages: 410
+
+Inventory ID: 6
+Title: Journal of AI Research
+Status: AVAILABLE
+Date of Return: N/A
+ISSN: 1076-9757
+Volume: 58
+Number: 12
+Edition: first
+Pages: 200
+
+Inventory ID: 20
+Title: Khan Academy
+Status: AVAILABLE
+Date of Return: N/A
+URL: https://www.khanacademy.org
+Data Format: HTML Website
+Size (bytes): 1024
+
+Inventory ID: 15
+Title: Led Zeppelin IV
+Status: AVAILABLE
+Date of Return: N/A
+Label: Atlantic Records
+Artist: Led Zeppelin
+Duration (minutes): 44.1
+Age Policy: all ages
+
+Inventory ID: 19
+Title: MIT OCW
+Status: AVAILABLE
+Date of Return: N/A
+URL: https://ocw.mit.edu
+Data Format: HTML Website
+Size (bytes): 2048
+
+Inventory ID: 8
+Title: Nature Neuroscience
+Status: AVAILABLE
+Date of Return: N/A
+ISSN: 1097-6256
+Volume: 23
+Number: 7
+Edition: first
+Pages: 210
+
+Inventory ID: 4
+Title: Operating Systems Explained
+Status: AVAILABLE
+Date of Return: N/A
+Year of publishing: 2017
+Publisher: CompSci Verlag, Frankfurt
+ISBN: 978-3-16-148410-0
+Author: Peter Neumann
+Edition: third
+Pages: 600
+
+Inventory ID: 12
+Title: Rumours
+Status: AVAILABLE
+Date of Return: N/A
+Label: Warner Bros.
+Artist: Fleetwood Mac
+Duration (minutes): 39.3
+Age Policy: all ages
+
+Inventory ID: 7
+Title: Science Advances
+Status: AVAILABLE
+Date of Return: N/A
+ISSN: 2375-2548
+Volume: 36
+Number: 9
+Edition: second
+Pages: 180
+
+Inventory ID: 18
+Title: Stanford Online
+Status: AVAILABLE
+Date of Return: N/A
+URL: https://online.stanford.edu
+Data Format: HTML Website
+Size (bytes): 3072
+
+Inventory ID: 14
+Title: The Dark Side of the Moon
+Status: AVAILABLE
+Date of Return: N/A
+Label: Harvest Records
+Artist: Pink Floyd
+Duration (minutes): 42.7
+Age Policy: all ages
+
+Inventory ID: 17
+Title: edX
+Status: AVAILABLE
+Date of Return: N/A
+URL: https://www.edx.org
+Data Format: HTML Website
+Size (bytes): 4096
+

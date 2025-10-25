@@ -181,4 +181,53 @@ public class BibTexStruct {
         return this.type;
     }
 
+    /**
+     * Init a new struct for manual creation
+     * @return Self (chained cals)
+     */
+    public BibTexStruct init()
+    {
+        parameterList = new ArrayList<>();
+        return this;
+    }
+
+    public BibTexStruct setType(BibTexType type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * Add a bib tex parameter
+     * @param _parameter The parameter
+     * @return self
+     */
+    public BibTexStruct addParameter(BibTexParameter _parameter)
+    {
+        if (parameterList == null) parameterList = new ArrayList<>();
+        parameterList.add(_parameter);
+        return this;
+    }
+
+    /**
+     * Get the BibTex String
+     * @return The BibTex String
+     */
+    public String getBibTexString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("@").append(type.getRegex()).append("{");
+
+        for (BibTexParameter p : parameterList)
+        {
+            sb.append(p.getName()).append(" = ");
+            if (p.getType() == BibTexParameterType.STRING) sb.append("{").append(p.getSvalue()).append("}");
+            else sb.append(p.getFvalue());
+            sb.append(", ");
+        }
+        sb.delete(sb.length()-2, sb.length());
+        sb.append("}");
+
+        return sb.toString();
+    }
 }

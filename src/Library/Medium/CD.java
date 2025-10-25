@@ -1,18 +1,17 @@
 package Library.Medium;
 
-import Library.bib_tex.BibTexException;
-import Library.bib_tex.BibTexParameter;
-import Library.bib_tex.BibTexStruct;
-import Library.bib_tex.BibTexType;
+import Library.bib_tex.*;
 import Library.io.ProcessOutputBuffer;
 import Library.io.Severity;
+
+import java.io.Serializable;
 
 /**
  * This class is used to represent a CD storage medium
  * @author lkoelbel
  * @matnr 21487
  */
-public class CD extends Medium{
+public class CD extends Medium implements Serializable {
     private String lable = null;
     private String artist = null;
     // New
@@ -76,6 +75,39 @@ public class CD extends Medium{
         sp.append("Age Policy: ").append(getAgePolicy());
         return sp.toString();
     }
+
+    /**
+     * Get a bibtex struct of the object
+     * @return the BibTexStruct
+     */
+    @Override
+    public BibTexStruct getBibtex() {
+        BibTexStruct bibTex = new BibTexStruct();
+        bibTex.init().setType(BibTexType.CD)
+                .addParameter(new BibTexParameter()
+                        .setName("Title")
+                        .setSvalue(getTitle())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Label")
+                        .setSvalue(getLable())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Artist")
+                        .setSvalue(getArtist())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Duration")
+                        .setFvalue(getDurationInMinutes())
+                        .setType(BibTexParameterType.NUMERIC_VALUE))
+                .addParameter(new BibTexParameter()
+                        .setName("AgePolicy")
+                        .setSvalue(getAgePolicy())
+                        .setType(BibTexParameterType.STRING));
+
+        return bibTex;
+    }
+
 
     /**
      * Parse values from a BibTex struct object

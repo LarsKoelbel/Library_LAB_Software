@@ -1,7 +1,9 @@
 package Library.Medium;
 
+import Library.bib_tex.BibTexStruct;
 import Library.bib_tex.BibTexType;
 
+import java.io.Serializable;
 import java.security.cert.TrustAnchor;
 import java.time.LocalDate;
 
@@ -10,7 +12,7 @@ import java.time.LocalDate;
  * @author lkoelbel
  * @matnr 21487
  */
-abstract public class Medium implements Comparable<Medium>{
+abstract public class Medium implements Comparable<Medium>, Serializable {
     private String title = null;
     private long inventoryID = -1;
     private Status status = null;
@@ -124,6 +126,12 @@ abstract public class Medium implements Comparable<Medium>{
     abstract public String generateRepresentation();
 
     /**
+     * Get a bibtex struct of the object
+     * @return the BibTexStruct
+     */
+    abstract public BibTexStruct getBibtex();
+
+    /**
      * Comparing to mediums means sorting them alphabetically
      * @param o Other
      * @return Return of compare to
@@ -131,5 +139,15 @@ abstract public class Medium implements Comparable<Medium>{
     @Override
     public int compareTo(Medium o) {
         return title.compareTo(o.title);
+    }
+
+    /**
+     * Get the short representation
+     * @return Short representation
+     */
+    @Override
+    public String toString()
+    {
+        return generateShortRepresentation();
     }
 }

@@ -1,19 +1,18 @@
 package Library.Medium;
 
-import Library.bib_tex.BibTexException;
-import Library.bib_tex.BibTexParameter;
-import Library.bib_tex.BibTexStruct;
-import Library.bib_tex.BibTexType;
+import Library.bib_tex.*;
 import Library.io.Communication;
 import Library.io.ProcessOutputBuffer;
 import Library.io.Severity;
+
+import java.io.Serializable;
 
 /**
  * This class is used to represent a paper (newspaper) storage medium
  * @author lkoelbel
  * @matnr 21487
  */
-public class Paper extends Medium{
+public class Paper extends Medium implements Serializable {
     private String ISSN = null;
     private int volume = 0;
     private int number = 0;
@@ -88,6 +87,43 @@ public class Paper extends Medium{
         sp.append("Pages: ").append(getPages());
         return sp.toString();
     }
+
+    /**
+     * Get a bibtex struct of the object
+     * @return the BibTexStruct
+     */
+    @Override
+    public BibTexStruct getBibtex() {
+        BibTexStruct bibTex = new BibTexStruct();
+        bibTex.init().setType(BibTexType.JOURNAL)
+                .addParameter(new BibTexParameter()
+                        .setName("Title")
+                        .setSvalue(getTitle())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("ISSN")
+                        .setSvalue(getISSN())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Volume")
+                        .setFvalue((double) getVolume())
+                        .setType(BibTexParameterType.NUMERIC_VALUE))
+                .addParameter(new BibTexParameter()
+                        .setName("Number")
+                        .setFvalue((double) getNumber())
+                        .setType(BibTexParameterType.NUMERIC_VALUE))
+                .addParameter(new BibTexParameter()
+                        .setName("Edition")
+                        .setSvalue(getEdition())
+                        .setType(BibTexParameterType.STRING))
+                .addParameter(new BibTexParameter()
+                        .setName("Pages")
+                        .setFvalue((double) getPages())
+                        .setType(BibTexParameterType.NUMERIC_VALUE));
+
+        return bibTex;
+    }
+
 
     /**
      * Parse values from a BibTex struct object
