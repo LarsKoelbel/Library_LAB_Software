@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"task9_zettelkasten"},{"l":"task9_zettelkasten.bib_tex"},{"l":"task9_zettelkasten.io"}];updateSearchResults();
