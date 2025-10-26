@@ -45,16 +45,18 @@ public class CD extends Medium implements Serializable {
         return durationInMinutes;
     }
 
-    public void setDurationInMinutes(double _durationInMinutes) {
+    public CD setDurationInMinutes(double _durationInMinutes) {
         this.durationInMinutes = _durationInMinutes;
+        return this;
     }
 
     public String getAgePolicy() {
         return agePolicy;
     }
 
-    public void setAgePolicy(String _agePolicy) {
+    public CD setAgePolicy(String _agePolicy) {
         this.agePolicy = _agePolicy;
+        return this;
     }
 
     /**

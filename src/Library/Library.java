@@ -1,7 +1,9 @@
 package Library;
 
 import Library.Medium.Medium;
+import Library.Medium.Status;
 import Library.bib_tex.BibTexParser;
+import Library.database.Server;
 import Library.io.*;
 import Library.persistency.BibTexPersistency;
 import Library.persistency.BinaryPersistency;
@@ -23,6 +25,8 @@ public class Library {
 
     private static final String DEFAULT_BINARY_FILE = "src/Library/data/objects.lib.bin";
     private static final String DEFAULT_BIBTEX_FILE = "src/Library/data/objects.lib.bibtex";
+
+    public static Server server = null;
 
     public static void main(String[] argv)
     {
@@ -50,15 +54,18 @@ public class Library {
                     //          -l - List long format
                     //          -s - list short format
                     //          -b - list bibtex
+                    //          -d - show database string
 
                     boolean listLong = false;
                     boolean listBibtex = false;
+                    boolean listDatabase = false;
 
                     if(params.length > 0)
                     {
                         if(Arrays.asList(params).contains("-l")) listLong = true;
                         if(Arrays.asList(params).contains("-s")) listLong = false;
                         if(Arrays.asList(params).contains("-b")) listBibtex = true;
+                        if(Arrays.asList(params).contains("-d")) listDatabase = true;
                     }
 
                     // Generate the output
@@ -75,6 +82,10 @@ public class Library {
                             {
                                 sb.append(m.getBibtex().getBibTexString()).append("\n\n");
                             }
+                            if (listDatabase)
+                            {
+                                sb.append(Collection.getDataBaseString(m)).append("\n\n");
+                            }
                         }
                     }else
                     {
@@ -85,6 +96,10 @@ public class Library {
                             if (listBibtex)
                             {
                                 sb.append("\t").append(m.getBibtex().getBibTexString()).append("\n");
+                            }
+                            if (listDatabase)
+                            {
+                                sb.append("\t").append(Collection.getDataBaseString(m)).append("\n");
                             }
                         }
                     }
@@ -334,6 +349,60 @@ public class Library {
                 }
             },"load bibtex");
 
+            // Load server
+            cli.registerEndpoint(new ICLIEndpoint() {
+                @Override
+                public void call(String[] params, ProcessOutputBuffer _out) {
+
+                    if (server == null || !server.testAuth(Communication.NULL_BUFFER))
+                    {
+                        _out.write("Server not connected or server connection lost. Please use 'connect database-server' to (re)connect", Severity.ERROR);
+                        return;
+                    }
+
+                    try
+                    {
+                        // Check if the collection is empty
+                        if(collection.isEmpty())
+                        {
+                            Collection c = server.getCollectionFromDatabase(_out);
+                            if(c != null)
+                            {
+                                if (c.isEmpty())
+                                {
+                                    _out.write("No data on server", Severity.REMARK);
+                                }else
+                                {
+                                    collection.merge(c);
+                                    _out.write("Data download complete", Severity.SUCCESS);
+                                }
+                            }
+                        }else
+                        {
+                            _out.write("Your current library is not empty. Loading from server in this state is not allowed out of risk to the database integrity. Merging local changes into the database is not jet supportet.\n" +
+                                    "The recommended procedure is to save your changed locally and clear using 'clear'", Severity.WARNING);
+                        }
+
+                    }catch (Exception e)
+                    {
+                        if (e instanceof IExceptionUserReadable)
+                        {
+                            _out.write(((IExceptionUserReadable) e).getUserMessage(), Severity.ERROR);
+                        }
+                        else
+                        {
+                            _out.write("Fatal error while loading: " + e.getMessage(), Severity.FATAL);
+                        }
+                    }
+
+                }
+
+                @Override
+                public String getProcessName() {
+                    return "load-server";
+                }
+            },"load database");
+
             // Clear list
             cli.registerEndpoint(new ICLIEndpoint() {
                 @Override
@@ -360,6 +429,18 @@ public class Library {
             cli.registerEndpoint(new ICLIEndpoint() {
                 @Override
                 public void call(String[] params, ProcessOutputBuffer _out) {
+                    // Check server status
+                    if(server != null)
+                    {
+                        if(!cli.ask(
+                                "The session is currently connected to a server. All drop operations will reflect to the servers database and can not be recovered. Are you sure yu want to proceed? [y/n]"
+                        ).equalsIgnoreCase("y"))
+                        {
+                            _out.write("Operation aborted. No items where dropped", Severity.REMARK);
+                            return;
+                        }
+                    }
+
                     // Check parms
                     if (params.length <= 0)
                     {
@@ -419,6 +500,50 @@ public class Library {
                     return "drop-medium";
                 }
             }, "drop");
+
+            // Connect server
+            cli.registerEndpoint(new ICLIEndpoint() {
+                @Override
+                public void call(String[] params, ProcessOutputBuffer _out) {
+                    String username = cli.ask("Enter username: ");
+                    String password = cli.ask("Password for " + username + ": ");
+
+                    server = new Server(username, password);
+
+                    if(server.testAuth(_out))
+                    {
+                        _out.write("Server connection ok", Severity.SUCCESS);
+                    }
+                }
+
+                @Override
+                public String getProcessName() {
+                    return "server-connection";
+                }
+            }, "connect database-server");
+
+            // Disconnect server
+            cli.registerEndpoint(new ICLIEndpoint() {
+                @Override
+                public void call(String[] params, ProcessOutputBuffer _out) {
+
+                    if (server != null)
+                    {
+                        server = null;
+                        _out.write("Disconnected from database-server", Severity.SUCCESS);
+                        _out.write("It is currently not supported to merge local changed into the server database. All changes made now will be lost, unless saved locally.", Severity.WARNING);
+                    }
+                    else
+                    {
+                        _out.write("No server connected", Severity.REMARK);
+                    }
+                }
+
+                @Override
+                public String getProcessName() {
+                    return "server-disconnection";
+                }
+            }, "disconnect database-server");
         }
 
         // Start the cli

@@ -1,16 +1,20 @@
 package Library;
 
-import Library.Medium.Medium;
-import Library.Medium.Status;
+import Library.Medium.*;
 import Library.bib_tex.BibTexException;
 import Library.bib_tex.BibTexParser;
+import Library.bib_tex.BibTexType;
+import Library.database.DatabaseException;
 import Library.io.Communication;
 import Library.io.IExceptionUserReadable;
 import Library.io.ProcessOutputBuffer;
 import Library.io.Severity;
 import Library.utils.DuplicateEntryException;
+import Library.utils.ISBNUtils;
+import Library.utils.URLUtils;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -33,38 +37,55 @@ public class Collection implements Iterable<Medium>, Serializable {
 
     /**
      * Get the next available id for the medium
+     * @param _out Process output buffer
      * @return ID
      */
-    private long getNextID()
+    private long getNextID(ProcessOutputBuffer _out)
     {
-        // Get the heist id
-        long heigh = 0;
-        for (Medium m : libList)
+        // Request an ID from the server if it is connected, else find the best id in the local dataset
+        if (Library.server != null)
         {
-            long id = m.getInventoryID();
-
-            if(id > heigh)
+            if(!Library.server.testAuth(Communication.NULL_BUFFER))
             {
-                heigh = id;
+                _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                        "adding new mediums in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                return -1;
+            }else
+            {
+                return Library.server.getFreeId(_out);
             }
-        }
-
-        // Create list of all possible ids
-        ArrayList<Long> IDList = new ArrayList<>(java.util.stream.LongStream.rangeClosed(1, heigh + 1)
-                .boxed()
-                .toList());
-
-
-        // Remove all taken
-        for (Medium m : libList)
+        }else
         {
-            long id = m.getInventoryID();
-            IDList.remove(id);
+            // Get the heist id
+            long heigh = 0;
+            for (Medium m : libList)
+            {
+                long id = m.getInventoryID();
+
+                if(id > heigh)
+                {
+                    heigh = id;
+                }
+            }
+
+            // Create list of all possible ids
+            ArrayList<Long> IDList = new ArrayList<>(java.util.stream.LongStream.rangeClosed(1, heigh + 1)
+                    .boxed()
+                    .toList());
+
+
+            // Remove all taken
+            for (Medium m : libList)
+            {
+                long id = m.getInventoryID();
+                IDList.remove(id);
+            }
+
+            IDList.sort((a,b) -> Math.toIntExact(a-b));
+
+            return IDList.getFirst();
         }
 
-        IDList.sort((a,b) -> Math.toIntExact(a-b));
-
-        return IDList.getFirst();
     }
 
     /**
@@ -77,9 +98,33 @@ public class Collection implements Iterable<Medium>, Serializable {
     {
         try
         {
+            long inventoryID = getNextID(_out);
+            if (inventoryID <= 0) return false;
             Medium m = BibTexParser.parseFromBibTexString(_bibTex, _out);
-            m.setInventoryID(getNextID());
+            m.setInventoryID(inventoryID);
             m.setStatus(Status.AVAILABLE);
+
+            // Sync with server
+            if (Library.server != null)
+            {
+                if (!Library.server.testAuth(Communication.NULL_BUFFER))
+                {
+                    _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                            "adding new mediums in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                    return false;
+                }else
+                {
+                    if(Library.server.add(m, _out))
+                    {
+                        _out.write("Medium added to server database", Severity.SUCCESS);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
             libList.add(m);
             SORTED = false;
             sort();
@@ -98,6 +143,15 @@ public class Collection implements Iterable<Medium>, Serializable {
         }
 
         return false;
+    }
+
+    /**
+     * Add a medium to the collection !!For internal use only. Else use the bibtex interface!!
+     * @param medium Medium
+     */
+    private void addMedium(Medium medium)
+    {
+        this.libList.add(medium);
     }
 
     /**
@@ -198,6 +252,26 @@ public class Collection implements Iterable<Medium>, Serializable {
                 if(_dropAll)
                 {
                     for (Medium me : m){
+                        if (Library.server != null)
+                        {
+                            if (!Library.server.testAuth(Communication.NULL_BUFFER))
+                            {
+                                _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                                        "dropping mediums in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                                return false;
+                            }else
+                            {
+                                if(Library.server.delete(me, _out))
+                                {
+                                    _out.write("Medium dropped from server database: " + me.getInventoryID(), Severity.SUCCESS);
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+
                         libList.remove(me);
                         _out.write("Removed medium of id: " + me.getInventoryID(), Severity.SUCCESS);
                     }
@@ -206,6 +280,26 @@ public class Collection implements Iterable<Medium>, Serializable {
                 else throw new DuplicateEntryException("Multiple titles for delete", Arrays.toString(m));
             }else
             {
+                if (Library.server != null)
+                {
+                    if (!Library.server.testAuth(Communication.NULL_BUFFER))
+                    {
+                        _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                                "dropping mediums in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                        return false;
+                    }else
+                    {
+                        if(Library.server.delete(m[0], _out))
+                        {
+                            _out.write("Medium dropped from server database: " + m[0].getInventoryID(), Severity.SUCCESS);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+
                 libList.remove(m[0]);
                 _out.write("Removed medium of title: " + m[0].getTitle(), Severity.SUCCESS);
                 SORTED = false;
@@ -227,6 +321,25 @@ public class Collection implements Iterable<Medium>, Serializable {
         Medium m = findMedium(_id, Communication.NULL_BUFFER);
         if (m != null)
         {
+            if (Library.server != null)
+            {
+                if (!Library.server.testAuth(Communication.NULL_BUFFER))
+                {
+                    _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                            "dropping mediums in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                    return false;
+                }else
+                {
+                    if(Library.server.delete(m, _out))
+                    {
+                        _out.write("Medium dropped from server database: " + m.getInventoryID(), Severity.SUCCESS);
+                    }else
+                    {
+                        return false;
+                    }
+                }
+            }
+
             libList.remove(m);
             _out.write("Removed medium of id: " + _id, Severity.SUCCESS);
             return true;
@@ -264,6 +377,230 @@ public class Collection implements Iterable<Medium>, Serializable {
     public void clear()
     {
         libList.clear();
+    }
+
+    /**
+     * Get a database string from a medium
+     * @param medium Medium
+     * @return The database string
+     */
+    public static String getDataBaseString(Medium medium)
+    {
+        String id = "NULL";
+        String title = "NULL";
+        String status = "NULL";
+        String dateOfReturn = "NULL"; // might be "NULL"
+        String type = "NULL";
+        String yearOfPublishing = "NULL"; // can be NULL
+        String publisher = "NULL";
+        String isbn = "NULL";
+        String author = "NULL";
+        String label = "NULL";
+        String artist = "NULL";
+        String durationInMinutes = "NULL"; // can be NULL
+        String agePolicy = "NULL";
+        String url = "NULL";
+        String dataFormat = "NULL";
+        String sizeInBytes = "NULL";
+        String issn = "NULL";
+        String volume = "NULL";
+        String number = "NULL";
+        String edition = "NULL";
+        String pages = "NULL";
+
+        id = String.valueOf(medium.getInventoryID());
+        title = medium.getTitle();
+
+        switch (medium.getStatus())
+        {
+            case Status.AVAILABLE -> status = "1";
+            case Status.CHECKED_OUT -> status = "0";
+            default -> status = "-1";
+        }
+
+        if(medium.getDateOfReturn() != null) dateOfReturn = medium.getDateOfReturn().toString();
+
+        if (medium instanceof Book)
+        {
+            Book m = (Book) medium;
+
+            yearOfPublishing = String.valueOf(m.getYearOfPublishing());
+            publisher = m.getPublicher();
+            isbn = m.getISBN();
+            author = m.getWriter();
+            edition = m.getEdition();
+            pages = String.valueOf(m.getPages());
+            type = "BOOK";
+        }
+        else if (medium instanceof CD)
+        {
+            CD m = (CD) medium;
+
+            label = m.getLable();
+            artist = m.getArtist();
+            durationInMinutes = String.valueOf(m.getDurationInMinutes());
+            agePolicy = m.getAgePolicy();
+            type = "CD";
+        }
+        else if (medium instanceof Paper)
+        {
+            Paper m = (Paper) medium;
+
+            issn = m.getISSN();
+            volume = String.valueOf(m.getVolume());
+            number = String.valueOf(m.getNumber());
+            edition = m.getEdition();
+            pages = String.valueOf(m.getPages());
+            type = "JOURNAL";
+        }
+        else if (medium instanceof ElectronicalMedium)
+        {
+            ElectronicalMedium m = (ElectronicalMedium) medium;
+
+            url = m.getURL();
+            dataFormat = m.getDataFormat();
+            sizeInBytes = String.valueOf(m.getSizeInBytes());
+            type = "EL_MED";
+        }
+
+        // Build the database string
+
+        return String.join("<element>",
+                id, title, status, dateOfReturn, type,
+                yearOfPublishing, publisher, isbn, author,
+                label, artist, durationInMinutes, agePolicy,
+                url, dataFormat, sizeInBytes, issn, volume,
+                number, edition, pages
+        );
+    }
+
+    /**
+     * Generate a new collection from a database string
+     * @param _str The database string
+     * @return The collection or null
+     */
+    public static Collection fromDataBaseString(String _str)
+    {
+
+        Collection collection = new Collection();
+
+        try
+        {
+            String[] mediums_data = _str.split("\n");
+
+            for (String med_string : mediums_data)
+            {
+                String[] data = med_string.split("<element>");
+
+                // Extract all data
+                int id = Integer.parseInt(data[0].trim());
+                String title = data[1].trim();
+                Status status = null;
+
+                switch (Integer.parseInt(data[2].trim())){
+                    case 1 -> status = Status.AVAILABLE;
+                    case 0 -> status = Status.CHECKED_OUT;
+                    default -> status = Status.UNKNOWN;
+                }
+
+                String dateOfReturn = data[3].trim(); // might be "NULL"
+                BibTexType type = null;
+
+                switch (data[4].trim())
+                {
+                    case "BOOK" -> type = BibTexType.BOOK;
+                    case "CD" -> type = BibTexType.CD;
+                    case "JOURNAL" -> type = BibTexType.JOURNAL;
+                    case "EL_MED" -> type = BibTexType.EL_MED;
+                }
+
+                String yearOfPublishing = data[5].trim(); // can be NULL
+                String publisher = data[6].trim();
+                String isbn = data[7].trim();
+                String author = data[8].trim();
+                String label = data[9].trim();
+                String artist = data[10].trim();
+                String durationInMinutes = data[11].trim(); // can be NULL
+                String agePolicy = data[12].trim();
+                String url = data[13].trim();
+                String dataFormat = data[14].trim();
+                String sizeInBytes = data[15].trim();
+                String issn = data[16].trim();
+                String volume = data[17].trim();
+                String number = data[18].trim();
+                String edition = data[19].trim();
+                String pages = data[20].trim();
+
+                // Create the medium
+
+                Medium medium = null;
+
+                switch (type)
+                {
+                    case BibTexType.BOOK:
+                    {
+                        medium = new Book()
+                                .setYearOfPublishing(Integer.parseInt(yearOfPublishing))
+                                .setPublicher(publisher)
+                                .setISBN(isbn)
+                                .setWriter(author)
+                                .setEdition(edition)
+                                .setPages(Integer.parseInt(pages));
+                        break;
+                    }
+                    case BibTexType.CD:
+                    {
+                        medium = new CD()
+                                .setLable(label)
+                                .setArtist(artist)
+                                .setDurationInMinutes(Double.parseDouble(durationInMinutes))
+                                .setAgePolicy(agePolicy);
+                        break;
+                    }
+                    case BibTexType.JOURNAL:
+                    {
+                        medium = new Paper()
+                                .setISSN(issn)
+                                .setVolume(Integer.parseInt(volume))
+                                .setNumber(Integer.parseInt(number))
+                                .setEdition(edition)
+                                .setPages(Integer.parseInt(pages));
+                        break;
+                    }
+                    case BibTexType.EL_MED:
+                    {
+                        medium = new ElectronicalMedium()
+                                .setURL(url)
+                                .setDataFormat(dataFormat)
+                                .setSizeInBytes(Long.parseLong(sizeInBytes));
+                    }
+                }
+
+                if (medium == null) throw new DatabaseException("Medium type invalid", "The data received from the server is incompatible with the library data format. Please contact administrator!");
+
+                medium.setInventoryID(id)
+                        .setTitle(title)
+                        .setStatus(status);
+                if (dateOfReturn.equalsIgnoreCase("none"))
+                {
+                    medium.setDateOfReturn(null);
+                }else
+                {
+                    medium.setDateOfReturn(LocalDate.parse(dateOfReturn));
+                }
+
+                collection.addMedium(medium);
+
+            }
+        } catch (ISBNUtils.ISBNException e) {
+            throw new RuntimeException(e);
+        } catch (URLUtils.URLException e) {
+            throw new RuntimeException(e);
+        }
+
+        collection.sort();
+
+        return collection;
     }
 
     /**

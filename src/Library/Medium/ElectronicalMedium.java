@@ -55,16 +55,18 @@ public class ElectronicalMedium extends Medium implements Serializable {
         return dataFormat;
     }
 
-    public void setDataFormat(String _dataFormat) {
+    public ElectronicalMedium setDataFormat(String _dataFormat) {
         this.dataFormat = _dataFormat;
+        return this;
     }
 
     public long getSizeInBytes() {
         return sizeInBytes;
     }
 
-    public void setSizeInBytes(long _sizeInBytes) {
+    public ElectronicalMedium setSizeInBytes(long _sizeInBytes) {
         this.sizeInBytes = _sizeInBytes;
+        return this;
     }
 
     /**

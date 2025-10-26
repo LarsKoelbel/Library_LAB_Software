@@ -2,6 +2,7 @@ package Library.test;
 
 import Library.Collection;
 import Library.Medium.Medium;
+import Library.database.Server;
 import Library.io.Communication;
 import Library.io.ProcessOutputBuffer;
 import Library.persistency.BibTexPersistency;
@@ -21,9 +22,34 @@ public class Test {
      */
     public static void main(String[] argv)
     {
-        test_Persistency();
+        test_Server();
     }
 
+
+    /**
+     * Test database server
+     */
+    private static void test_Server()
+    {
+        Server server = new Server("library","database");
+        ProcessOutputBuffer out = new ProcessOutputBuffer("test-server");
+        Collection c = server.getCollectionFromDatabase(out);
+
+        System.out.println(out);
+
+        if (c == null) return;
+
+        for (Medium m : c)
+        {
+            System.out.println(m);
+        }
+
+        out = new ProcessOutputBuffer("test-id-generation");
+
+        System.out.println("ID from server: " + server.getFreeId(out));
+
+        System.out.println(out);
+    }
 
     /**
      * Test the collection class

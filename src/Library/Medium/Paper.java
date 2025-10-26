@@ -56,16 +56,18 @@ public class Paper extends Medium implements Serializable {
         return edition;
     }
 
-    public void setEdition(String _edition) {
+    public Paper setEdition(String _edition) {
         this.edition = _edition;
+        return this;
     }
 
     public int getPages() {
         return pages;
     }
 
-    public void setPages(int _pages) {
+    public Paper setPages(int _pages) {
         this.pages = _pages;
+        return this;
     }
 
     /**
