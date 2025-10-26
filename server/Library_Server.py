@@ -57,9 +57,9 @@ class Message:
         return f'{self.type}</>{self.auth}</>{self.payload}'
 
 class Server:
-    def __init__(self, database: Database):
+    def __init__(self, database: Database, remotePassword):
         self.app = Flask(__name__)
-        self.REMOTE_PASSWORD = 'database'
+        self.REMOTE_PASSWORD = remotePassword
         self.sessions = {}
         self.database = database
 
@@ -276,8 +276,11 @@ def find_free_id(database):
     print(available, 'biggest: ', biggest)
     return available[0]
 
-d = Database('library','Bornholm')
+with open('database.passwd', 'r') as file:
+    password = file.read().strip()
+
+d = Database('library','12345')
 d.connect('library')
 
-s = Server(d)
+s = Server(d, password)
 s.start()

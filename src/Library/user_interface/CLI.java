@@ -250,6 +250,18 @@ public class CLI {
                 return "block-grep-operation";
             }
         },"blocks with");
+
+        this.registerEndpoint(new ICLIEndpoint() {
+            @Override
+            public void call(String[] params, ProcessOutputBuffer _out) {
+                _out.write(ICLIHelpContainer.CLI_HELP);
+            }
+
+            @Override
+            public String getProcessName() {
+                return "cli-help";
+            }
+        }, "?");
     }
 
     /**

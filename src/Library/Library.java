@@ -719,6 +719,8 @@ public class Library {
                 }
 
                 _out.write("Running in detached/ offline mode", Severity.REMARK);
+
+                _out.write("\nType '?' for help and command overview");
             }
 
             @Override
