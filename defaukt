@@ -1,0 +1,9 @@
+@book{Author = {Alfred V.AHO, Ravi Sethi, Jeffrey D. Ullman}, Title = {Compiler-Bau}, Publisher = {Eddison-Wessley}, Year = 1986.0, ISBN = {9783-893-191505}, Edition = {3. Nachdruck}, Pages = 567.0}
+@book{Author = {Alfred V.AHO, Ravi Sethi, Jeffrey D. Ullman}, Title = {Compiler-Bau}, Publisher = {Eddison-Wessley}, Year = 1986.0, ISBN = {9783-893-191512}, Edition = {3. Nachdruck}, Pages = 377.0}
+@elMed{Title = {Coursera}, URL = {https://www.coursera.org}, DataFormat = {HTML Website}, Size = 5120.0}
+@book{Author = {Alice Weber}, Title = {Data Structures and Algorithms}, Publisher = {TechPress, Berlin}, Year = 2015.0, ISBN = {978-3-16-148410-0}, Edition = {first}, Pages = 520.0}
+@book{Author = {Clara Bauer}, Title = {Database Systems}, Publisher = {Data Press, Cologne}, Year = 2020.0, ISBN = {978-3-16-148410-0}, Edition = {second}, Pages = 480.0}
+@book{Author = {Maria Fischer}, Title = {Deep Learning with Python}, Publisher = {AI Publications, Hamburg}, Year = 2021.0, ISBN = {978-3-16-148410-0}, Edition = {first}, Pages = 350.0}
+@cd{Title = {Hotel California}, Label = {Asylum Records}, Artist = {Eagles}, Duration = 43.2, AgePolicy = {all ages}}
+@journal{Title = {IEEE Transactions on Robotics}, ISSN = {1552-3098}, Volume = 37.0, Number = 6.0, Edition = {first}, Pages = 250.0}
+@journal{Title = {Journal of AI Research}, ISSN = {1076-9757}, Volume = 58.0, Number = 12.0, Edition = {first}, Pages = 200.0}

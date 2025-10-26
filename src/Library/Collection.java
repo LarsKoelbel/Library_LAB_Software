@@ -159,15 +159,31 @@ public class Collection implements Iterable<Medium>, Serializable {
      * @param _title Title
      * @param _out Process output buffer
      * @param _reverse Reverse the list
+     * @param _exact Search for exact title
+     * @param _ignoreCase Ignore case in exact mode
      * @return The medium or null
      */
-    public Medium[] findMedium(String _title, ProcessOutputBuffer _out, boolean _reverse)
+    public Medium[] findMedium(String _title, ProcessOutputBuffer _out, boolean _reverse, boolean _exact, boolean _ignoreCase)
     {
         ArrayList<Medium> mediumList = new ArrayList<>();
 
         for (Medium m : libList)
         {
-            if (m.getTitle().equalsIgnoreCase(_title)) mediumList.add(m);
+            if (!_exact)
+            {
+                if (m.getTitle().toLowerCase().contains(_title.toLowerCase())) mediumList.add(m);
+            }
+            else
+            {
+                if (_ignoreCase)
+                {
+                    if (m.getTitle().equalsIgnoreCase(_title)) mediumList.add(m);
+                }
+                else
+                {
+                    if (m.getTitle().equals(_title)) mediumList.add(m);
+                }
+            }
         }
 
         if (mediumList.isEmpty())
@@ -182,6 +198,18 @@ public class Collection implements Iterable<Medium>, Serializable {
         if (_reverse) Collections.reverse(mediumList);
 
         return mediumList.toArray(new Medium[0]);
+    }
+
+    /**
+     * Find a mediums by title
+     * @param _title Title
+     * @param _out Process output buffer
+     * @param _reverse Reverse the list
+     * @return The medium or null
+     */
+    public Medium[] findMedium(String _title, ProcessOutputBuffer _out, boolean _reverse)
+    {
+        return findMedium(_title, _out, _reverse, false, false);
     }
 
     /**

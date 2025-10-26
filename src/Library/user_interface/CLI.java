@@ -21,7 +21,9 @@ public class CLI {
 
     private boolean ACTIVE = false;
 
-    private static final String VERSION = "1.03.0-alpha";
+    private ICLIEndpoint startUpCall = null;
+
+    private static final String VERSION = "1.04.3-alpha";
 
 
 
@@ -94,13 +96,13 @@ public class CLI {
         {
             switch (m.getSeverity())
             {
-                case Severity.ERROR -> sb.append("ERROR: ").append("\n").append(
+                case Severity.ERROR -> sb.append(TextUtils.style("ERROR: ", IColorCodes.RED + IColorCodes.BOLD)).append("\n").append(
                         TextUtils.style(m.toString(), IColorCodes.RED)
                         ).append("\n");
-                case Severity.WARNING -> sb.append("WARNING: ").append("\n").append(
+                case Severity.WARNING -> sb.append(TextUtils.style("WARNING: ", IColorCodes.YELLOW + IColorCodes.BOLD)).append(
                         TextUtils.style(m.toString(), IColorCodes.YELLOW)
                 ).append("\n");
-                case Severity.FATAL -> sb.append("FATAL: ").append("\n").append(
+                case Severity.FATAL -> sb.append(TextUtils.style("FATAL: ", IColorCodes.RED + IColorCodes.BOLD)).append("\n").append(
                         TextUtils.style(m.toString(), IColorCodes.PURPLE)
                 ).append("\n");
                 case Severity.SUCCESS -> sb.append(
@@ -139,6 +141,15 @@ public class CLI {
     }
 
     /**
+     * Register a cli startup call
+     * @param _call Endpoint to be called (not part of the tree)
+     */
+    public void registerStartUpCall(ICLIEndpoint _call)
+    {
+        startUpCall = _call;
+    }
+
+    /**
      * Register elementary commands
      * grep - filter output buffer
      */
@@ -165,7 +176,7 @@ public class CLI {
 
                     for (String line : lines)
                     {
-                        if (line.contains(regex)) {
+                        if (line.toLowerCase().contains(regex.toLowerCase())) {
                             processOutputBuffer.write(new Message(line, m.getSeverity()).setTimestamp(m.getTimestamp()));
                         }
                     }
@@ -180,6 +191,65 @@ public class CLI {
                 return "grep-operation";
             }
         },"grep");
+
+        this.registerEndpoint(new ICLIEndpoint() {
+            @Override
+            public void call(String[] params, ProcessOutputBuffer _out) {
+                if (params.length <= 0) return;
+                StringBuilder sb = new StringBuilder();
+
+                for (String x : params)
+                {
+                    sb.append(x).append(" ");
+                }
+
+                String regex = sb.toString().strip();
+
+                ProcessOutputBuffer processOutputBuffer = new ProcessOutputBuffer("block-grep-operation::" + regex);
+
+                StringBuilder block = new StringBuilder();
+                boolean goodBlock = false;
+                Severity lastSeverity = null;
+                long lastTimestamp = -1;
+
+                for (Message m : _out.getAll())
+                {
+                    lastSeverity = m.getSeverity();
+                    lastTimestamp = m.getTimestamp();
+                    String[] lines = m.toString().split("\n");
+
+                    for (String line : lines)
+                    {
+                        block.append(line).append("\n");
+                        if (line.contains(regex)) {
+                            goodBlock = true;
+                        }
+                        if (line.isBlank())
+                        {
+                            if (goodBlock)
+                            {
+                                processOutputBuffer.write(new Message(block.toString(), lastSeverity).setTimestamp(lastTimestamp));
+                                goodBlock = false;
+                            }
+                            block = new StringBuilder();
+                        }
+                    }
+                }
+
+                if(!block.isEmpty() && goodBlock)
+                {
+                    processOutputBuffer.write(new Message(block.toString(), lastSeverity).setTimestamp(lastTimestamp));
+                }
+
+                _out.replace(processOutputBuffer);
+
+            }
+
+            @Override
+            public String getProcessName() {
+                return "block-grep-operation";
+            }
+        },"blocks with");
     }
 
     /**
@@ -209,8 +279,25 @@ public class CLI {
         // Init elementary commands like grep
         initElementaryCommands();
 
+        System.out.println();
         System.out.println("Library CLI version: " + VERSION);
         System.out.println();
+
+        // Run startup call if available
+
+        if(startUpCall != null)
+        {
+            ProcessOutputBuffer out = new ProcessOutputBuffer("cli-startup");
+            startUpCall.call(null, out);
+
+            if(out.hasMessages())
+            {
+                System.out.println(getProcessOutputBufferFormated(out));
+
+                // Check for fatal errors
+                if(out.getMostSevere().getSeverity().getLevel() >= Severity.FATAL.getLevel()) return;
+            }
+        }
 
         ACTIVE = true;
 
@@ -235,7 +322,7 @@ public class CLI {
                 if (processOutputBuffer.hasMessages())
                 {
                     // Exit if error fatal
-                    if(processOutputBuffer.getMostSevere().getSeverity() == Severity.FATAL){
+                    if(processOutputBuffer.getMostSevere().getSeverity().getLevel() >= Severity.FATAL.getLevel()){
                         System.out.println(getProcessOutputBufferFormated(processOutputBuffer));
                         return;
                     }

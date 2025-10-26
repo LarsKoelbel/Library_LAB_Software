@@ -106,6 +106,7 @@ public class Book extends Medium implements Serializable {
     {
         StringBuilder sp = new StringBuilder();
         sp.append("Inventory ID: ").append(getInventoryID()).append("\n");
+        sp.append("Type: ").append(getType()).append("\n");
         sp.append("Title: ").append(getTitle()).append("\n");
         sp.append("Status: ").append(getStatus()).append("\n");
         sp.append("Date of Return: ").append(getDateOfReturn() != null ? getDateOfReturn() : "N/A").append("\n");

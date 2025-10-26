@@ -116,6 +116,161 @@ public class Library {
                 }
             }, "list");
 
+            // List search
+            cli.registerEndpoint(new ICLIEndpoint() {
+                @Override
+                public void call(String[] params, ProcessOutputBuffer _out) {
+                    // Handle parameters empty
+                    if (params.length <= 0)
+                    {
+                        _out.write("Missing search parameter", Severity.ERROR);
+                        return;
+                    }
+
+                    // Handle case collection empty
+                    if (collection.isEmpty())
+                    {
+                        _out.write("No data yet");
+                        return;
+                    }
+
+                    // Handel options
+                    // Options:
+                    //          -l - List long format
+                    //          -s - list short format
+                    //          -b - list bibtex
+                    //          -d - show database string
+                    //          -e - exact search
+                    //          -ignore-case - ignore case in exact search
+
+                    boolean listLong = false;
+                    boolean listBibtex = false;
+                    boolean listDatabase = false;
+                    boolean exactSearch = false;
+                    boolean ignoreCase = false;
+
+                    if(params.length > 0)
+                    {
+                        if(Arrays.asList(params).contains("-l")) listLong = true;
+                        if(Arrays.asList(params).contains("-s")) listLong = false;
+                        if(Arrays.asList(params).contains("-b")) listBibtex = true;
+                        if(Arrays.asList(params).contains("-d")) listDatabase = true;
+                        if(Arrays.asList(params).contains("-e")) exactSearch = true;
+                        if(Arrays.asList(params).contains("-ignore-case")) ignoreCase = true;
+                    }
+
+                    // Get title from params
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 1; i<params.length; i++)
+                    {
+                        if(!params[i].contains("-l")
+                                && !params[i].equals("-s")
+                                && !params[i].equals("-b")
+                                && !params[i].equals("-e")
+                                && !params[i].equals("-ignore-case")
+                                && !params[i].equals("-d")) sb.append(params[i]).append(" ");
+                    }
+
+                    String title = sb.toString().strip();
+
+                    if (title.isBlank())
+                    {
+                        _out.write("Missing search parameter", Severity.ERROR);
+                        return;
+                    }
+
+                    // Search collection
+                    Medium[] mediums = null;
+                    switch (params[0])
+                    {
+                        case "title":
+                        {
+                            if (!exactSearch)
+                            {
+                                mediums = collection.findMedium(title, _out);
+                            }else
+                            {
+                                if (ignoreCase)
+                                {
+                                    mediums = collection.findMedium(title, _out, false, true, true);
+                                }
+                                else
+                                {
+                                    mediums = collection.findMedium(title, _out, false, true, false);
+                                }
+                            }
+                            break;
+                        }
+                        case "id":
+                        {
+                            try
+                            {
+                                Medium m = collection.findMedium(Long.parseLong(title), _out);
+                                if (m != null) mediums = new Medium[] {m};
+                                break;
+                            }catch (NumberFormatException e)
+                            {
+                                _out.write("Invalid numerical value for id: " + title, Severity.ERROR);
+                                return;
+                            }
+
+                        }
+                    }
+
+                    // Generate the output
+
+                    if (mediums == null || mediums.length <= 0)
+                    {
+                        _out.write("No mediums found");
+                        return;
+                    }
+
+                    sb = new StringBuilder();
+
+                    if (listLong)
+                    {
+                        for (Medium m : mediums)
+                        {
+                            sb.append(m.generateRepresentation()).append("\n\n");
+
+                            if (listBibtex)
+                            {
+                                sb.append(m.getBibtex().getBibTexString()).append("\n\n");
+                            }
+                            if (listDatabase)
+                            {
+                                sb.append(Collection.getDataBaseString(m)).append("\n\n");
+                            }
+                        }
+                    }else
+                    {
+                        for (Medium m : mediums)
+                        {
+                            sb.append(m.generateShortRepresentation()).append("\n");
+
+                            if (listBibtex)
+                            {
+                                sb.append("\t").append(m.getBibtex().getBibTexString()).append("\n");
+                            }
+                            if (listDatabase)
+                            {
+                                sb.append("\t").append(Collection.getDataBaseString(m)).append("\n");
+                            }
+                        }
+                    }
+
+                    // Write everything to the buffer
+
+                    _out.write(sb.toString());
+
+                }
+
+                @Override
+                public String getProcessName() {
+                    return "search-mediums";
+                }
+            }, "search");
+
             // Add command - add new BibTex Medium
             cli.registerEndpoint(new ICLIEndpoint() {
                 @Override
@@ -461,7 +616,7 @@ public class Library {
                             StringBuilder sb = new StringBuilder();
                             for (int i = 1; i<params.length; i++)
                             {
-                                if(!params[i].contains("-f")) sb.append(params[i]).append(" ");
+                                if(!params[i].equals("-f")) sb.append(params[i]).append(" ");
                             }
 
                             String title = sb.toString().strip();
@@ -513,6 +668,9 @@ public class Library {
                     if(server.testAuth(_out))
                     {
                         _out.write("Server connection ok", Severity.SUCCESS);
+                    }else
+                    {
+                        server = null;
                     }
                 }
 
@@ -545,6 +703,29 @@ public class Library {
                 }
             }, "disconnect database-server");
         }
+
+        // Register CLI startup call
+        cli.registerStartUpCall(new ICLIEndpoint() {
+            @Override
+            public void call(String[] params, ProcessOutputBuffer _out) {
+                _out.write("Checking server availability...");
+                Server server1 = new Server("","");
+                if(server1.testConnection())
+                {
+                    _out.write("Server available - use 'connect' to connect", Severity.SUCCESS);
+                }else
+                {
+                    _out.write("Server not available - check internet connection", Severity.WARNING);
+                }
+
+                _out.write("Running in detached/ offline mode", Severity.REMARK);
+            }
+
+            @Override
+            public String getProcessName() {
+                return "cli-startup";
+            }
+        });
 
         // Start the cli
 
