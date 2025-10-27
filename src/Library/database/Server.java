@@ -19,7 +19,7 @@ import org.json.JSONObject;
 * @author lkoeble 21487
 */
 public class Server {
-    private final String SERVER_URL = "http://192.168.178.159:5000";
+    private final String SERVER_URL = IServerAddress.SERVER_HOST_ADDR;
     private String USERNAME = "alice";
     private String PASSWORD = "database";
 
