@@ -248,6 +248,8 @@ You can specify a **server scope** to select which server address is used.
 | `global`, `global_1` | Both connect to the **first global server**. |
 | `global_2` | Connects to the **second global server**. |
 
+If no scope is specified, the program will always attempt to context to a server on the default scope.
+
 ### 🧩 Examples
 ```
 connect database-server
