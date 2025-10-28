@@ -384,6 +384,13 @@ public class Library {
             cli.registerEndpoint(new ICLIEndpoint() {
                 @Override
                 public void call(String[] params, ProcessOutputBuffer _out) {
+                    if (server != null)
+                    {
+                        _out.write("The current session is or was connected to a server. Database integrity does not allow to load local data in unclear" +
+                                " operational state. To load local data, please officially disconnect from the server using 'disconnect' command", Severity.WARNING);
+                        return;
+                    }
+
                     // Check path
                     if (params.length <= 0)
                     {
@@ -446,6 +453,13 @@ public class Library {
             cli.registerEndpoint(new ICLIEndpoint() {
                 @Override
                 public void call(String[] params, ProcessOutputBuffer _out) {
+                    if (server != null)
+                    {
+                        _out.write("The current session is or was connected to a server. Database integrity does not allow to load local data in unclear" +
+                                " operational state. To load local data, please officially disconnect from the server using 'disconnect' command", Severity.WARNING);
+                        return;
+                    }
+
                     // Check path
                     if (params.length <= 0)
                     {
