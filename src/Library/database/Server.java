@@ -45,6 +45,10 @@ public class Server {
         conn.setRequestProperty("Accept", "application/json");
         conn.setDoOutput(true);
 
+        // Set timeouts (milliseconds)
+        conn.setConnectTimeout(5000);  // 5 seconds to connect
+        conn.setReadTimeout(10000);    // 10 seconds to read response
+
         try (OutputStream os = conn.getOutputStream()) {
             byte[] input = payload.toString().getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
