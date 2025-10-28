@@ -3,6 +3,7 @@ package Library.test;
 import Library.Collection;
 import Library.Medium.Medium;
 import Library.database.Server;
+import Library.database.ServerAddressScopes;
 import Library.io.Communication;
 import Library.io.ProcessOutputBuffer;
 import Library.persistency.BibTexPersistency;
@@ -31,7 +32,7 @@ public class Test {
      */
     private static void test_Server()
     {
-        Server server = new Server("library","database");
+        Server server = new Server("library","database", ServerAddressScopes.DEFAULT.url);
         ProcessOutputBuffer out = new ProcessOutputBuffer("test-server");
         Collection c = server.getCollectionFromDatabase(out);
 

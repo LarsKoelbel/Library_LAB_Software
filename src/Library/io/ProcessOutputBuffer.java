@@ -90,6 +90,22 @@ public class ProcessOutputBuffer {
     }
 
     /**
+     * Create an empty line in the buffer
+     */
+    public void nl()
+    {
+        this.write("");
+    }
+
+    /**
+     * Clear all messages from the buffer
+     */
+    public void clear()
+    {
+        this.buffer.clear();
+    }
+
+    /**
      * Replace the buffer with the messages from another buffer
      * @param other Other buffer
      */

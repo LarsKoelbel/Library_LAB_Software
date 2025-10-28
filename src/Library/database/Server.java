@@ -19,7 +19,7 @@ import org.json.JSONObject;
 * @author lkoeble 21487
 */
 public class Server {
-    private final String SERVER_URL = IServerAddress.SERVER_HOST_ADDR;
+    private  String SERVER_URL = null;
     private String USERNAME = "alice";
     private String PASSWORD = "database";
 
@@ -27,11 +27,13 @@ public class Server {
      * Create a new server (connection) with a username and a password
      * @param _username Username
      * @param _password Password
+     * @param _url URL of the server
      */
-    public Server(String _username, String _password)
+    public Server(String _username, String _password, String _url)
     {
         USERNAME = _username;
         PASSWORD = _password;
+        SERVER_URL = _url;
     }
 
     // Helper function to send POST requests with JSON

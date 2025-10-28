@@ -135,13 +135,42 @@ public interface ICLIHelpContainer {
             "\uD83D\uDD17  CONNECT / DISCONNECT\n" +
             "───────────────────────────────────────────────\n" +
             "Command:\n" +
-            "    connect database-server\n" +
+            "    connect database-server [scope]\n" +
             "    disconnect database-server\n" +
             "\n" +
             "Description:\n" +
             "    Connects or disconnects from the remote database server.\n" +
-            "    Prompts for username and password when connecting.\n" +
+            "    When connecting, the CLI will prompt for your username\n" +
+            "    and password.\n" +
             "\n" +
+            "    You can specify a **server scope** to choose which server\n" +
+            "    address is used for the connection.\n" +
+            "\n" +
+            "Scopes:\n" +
+            "    default\n" +
+            "        → Uses the default configured server.\n" +
+            "\n" +
+            "    localhost\n" +
+            "        → Connects to a server running on this machine.\n" +
+            "\n" +
+            "    local, local_network\n" +
+            "        → Both connect to a server within the **local network**.\n" +
+            "\n" +
+            "    global, global_1\n" +
+            "        → Both connect to the **first global server**.\n" +
+            "\n" +
+            "    global_2\n" +
+            "        → Connects to the **second global server**.\n" +
+            "\n" +
+            "Examples:\n" +
+            "    connect database-server\n" +
+            "    connect database-server localhost\n" +
+            "    connect database-server local\n" +
+            "    connect database-server local_network\n" +
+            "    connect database-server global\n" +
+            "    connect database-server global_1\n" +
+            "    connect database-server global_2\n" +
+            "    disconnect database-server\n" +
             "───────────────────────────────────────────────\n" +
             "⚙\uFE0F  PIPELINING & FILTERING\n" +
             "───────────────────────────────────────────────\n" +

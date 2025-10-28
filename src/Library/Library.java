@@ -4,6 +4,7 @@ import Library.Medium.Medium;
 import Library.Medium.Status;
 import Library.bib_tex.BibTexParser;
 import Library.database.Server;
+import Library.database.ServerAddressScopes;
 import Library.io.*;
 import Library.persistency.BibTexPersistency;
 import Library.persistency.BinaryPersistency;
@@ -14,6 +15,7 @@ import Library.utils.DuplicateEntryException;
 
 import java.lang.reflect.Array;
 import java.rmi.ServerError;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -674,10 +676,29 @@ public class Library {
             cli.registerEndpoint(new ICLIEndpoint() {
                 @Override
                 public void call(String[] params, ProcessOutputBuffer _out) {
+                    // Handle scope
+                    ServerAddressScopes scope = ServerAddressScopes.DEFAULT;
+                    if (params.length > 0)
+                    {
+                        switch (params[0])
+                        {
+                            case "default" -> {}
+                            case "localhost" -> scope = ServerAddressScopes.LOCAL_HOST;
+                            case "local", "local_network" -> scope = ServerAddressScopes.LOCAL_NETWORK;
+                            case "global", "global_1" -> scope = ServerAddressScopes.GLOBAL_1;
+                            case "global_2" -> scope = ServerAddressScopes.GLOBAL_2;
+                            default -> {
+                                _out.write("The selected server scope is not valid: " + params[0], Severity.ERROR);
+                                return;
+                            }
+                        }
+                    }
+
+
                     String username = cli.ask("Enter username: ");
                     String password = cli.ask("Password for " + username + ": ");
 
-                    server = new Server(username, password);
+                    server = new Server(username, password, scope.url);
 
                     if(server.testAuth(_out))
                     {
@@ -723,10 +744,39 @@ public class Library {
             @Override
             public void call(String[] params, ProcessOutputBuffer _out) {
                 _out.write("Checking server availability...");
-                Server server1 = new Server("","");
-                if(server1.testConnection())
+                // Check server for all scopes not marked skip
+                boolean serverAvailable = false;
+                ArrayList<ServerAddressScopes> serverAddressScopesArrayList = new ArrayList<>();
+                for (ServerAddressScopes a : ServerAddressScopes.values())
                 {
-                    _out.write("Server available - use 'connect' to connect", Severity.SUCCESS);
+                    if(a.searchOnStartup)
+                    {
+                        Server server1 = new Server("","", a.url);
+                        _out.write("Searching on " + a.name);
+                        cli.flushOutputBuffer(_out);
+                        if(server1.testConnection())
+                        {
+                            _out.write("Server available", Severity.SUCCESS);
+                            serverAddressScopesArrayList.add(a);
+                            serverAvailable = true;
+                        }else
+                        {
+                            _out.write("Server not available", Severity.WARNING);
+                        }
+                        cli.flushOutputBuffer(_out);
+                    }
+                }
+
+                _out.nl();
+
+                if(serverAvailable)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    for (ServerAddressScopes s : serverAddressScopesArrayList)
+                    {
+                        sb.append(s.name).append(", ");
+                    }
+                    _out.write("Server available on: "+ sb.substring(0,sb.length()-2) +" - use 'connect' to connect", Severity.SUCCESS);
                 }else
                 {
                     _out.write("Server not available - check internet connection", Severity.WARNING);

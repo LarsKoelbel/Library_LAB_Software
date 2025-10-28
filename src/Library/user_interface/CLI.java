@@ -265,6 +265,16 @@ public class CLI {
     }
 
     /**
+     * Flush the content of an output buffer directly to the console before the process has finished
+     * @param _out Process output buffer to flush
+     */
+    public void flushOutputBuffer(ProcessOutputBuffer _out)
+    {
+        System.out.println(getProcessOutputBufferFormated(_out));
+        _out.clear();
+    }
+
+    /**
      * Start the CLI Interface
      * @param _noExit Do not set up an exit command (not commanded)
      */
