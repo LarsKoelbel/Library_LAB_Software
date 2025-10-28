@@ -41,7 +41,7 @@ The most important constrains include:
 - loading from local binary file -> **disabled**
 - loading from local bibtex file -> **disabled**
 - loading from server when the local library is not empty -> **disabled**
-- adding ad dropping mediums in [unclear operating conditions](#-unclear-operating-state) -> **disabled**
+- adding or dropping mediums in [unclear operating conditions](#-unclear-operating-state) -> **disabled**
 
 For security reasons, database integrity ***can not be disabled***
 
