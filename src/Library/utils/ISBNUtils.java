@@ -34,7 +34,7 @@ public class ISBNUtils {
                 {
                     int[] numbers = getIntArrayFromISBNString(_isbn);
                     return checkISBN10(numbers);
-                }catch (ISBNException _)
+                }catch (ISBNException e)
                 {
                     return false;
                 }
@@ -43,7 +43,7 @@ public class ISBNUtils {
                 {
                     int[] numbers = getIntArrayFromISBNString(_isbn);
                     return checkISBN13(numbers);
-                }catch (ISBNException _)
+                }catch (ISBNException e)
                 {
                     return false;
                 }

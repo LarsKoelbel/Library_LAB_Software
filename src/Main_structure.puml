@@ -1,0 +1,933 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": false,
+    "cutTests": false,
+    "cutClient": false,
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": false,
+    "cutConstructors": false
+  },
+  "graphTraversal": {
+    "forwardDepth": 1000,
+    "backwardDepth": 1000,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": false,
+    "hideInterfaceCalls": false, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "BothDirections" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 7,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "Main",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_111612081 { 
+   	label=utils
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   DuplicateEntryException2060478050[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DuplicateEntryException</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   userMessage: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ DuplicateEntryException(message: String, _userMessage: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getUserMessage(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ISBNUtils2060478050[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ISBNUtils</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- checkISBN10(isbn: int[]): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- checkISBN13(isbn: int[]): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ checkISBNString(_isbn: String): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- getIntArrayFromISBNString(_isbn: String): int[]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TextUtils2060478050[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TextUtils</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getSubstrings(_string: String): String[]</TD></TR>
+<TR><TD ALIGN="LEFT" >+ style(_s: String, _style: String): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+URLUtils2060478050[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)URLUtils</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- checkURL(urlString: String): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ checkURLString(_url: String): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+subgraph cluster_1653249729 { 
+   	label=URLUtils
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   URLException604216050[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)URLException</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ URLException(message: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1732482654 { 
+   	label=ISBNUtils
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   ISBNException1300522229[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ISBNException</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ ISBNException(message: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+subgraph cluster_119441693 { 
+   	label=bib_tex
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   BibTexException143951728[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BibTexException</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   userMessage: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ BibTexException(_message: String, _userMessage: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTexPositionMarkerForError(_input: String, _index: int): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getUserMessage(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+BibTexParameter143951728[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BibTexParameter</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   fvalue: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   svalue: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   type: BibTexParameterType [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getFvalue(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getSvalue(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getType(): BibTexParameterType</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setFvalue(_fvalue: Double): BibTexParameter</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setName(_name: String): BibTexParameter</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setSvalue(_svalue: String): BibTexParameter</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setType(_type: BibTexParameterType): BibTexParameter</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+BibTexParameterType143951728[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(E)BibTexParameterType</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   NUMERIC_VALUE: BibTexParameterType [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   STRING: BibTexParameterType [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ valueOf(name: String): BibTexParameterType</TD></TR>
+<TR><TD ALIGN="LEFT" >+ values(): BibTexParameterType[]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#DCFBD5"
+];
+
+BibTexParser143951728[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BibTexParser</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ parseFromBibTexString(_input: String, _out: ProcessOutputBuffer): Medium</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+BibTexStruct143951728[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BibTexStruct</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   parameterList: List&lt;BibTexParameter&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   type: BibTexType [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addParameter(_parameter: BibTexParameter): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getBibTexString(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getParameterList(): List&lt;BibTexParameter&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >- getStrings(parameterStringBuilder: StringBuilder, _input: String, _pos: int): String[]</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getType(): BibTexType</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init(): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ parseFromString(_input: String, _out: ProcessOutputBuffer): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setType(type: BibTexType): BibTexStruct</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+BibTexType143951728[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(E)BibTexType</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   BOOK: BibTexType [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   CD: BibTexType [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   EL_MED: BibTexType [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   JOURNAL: BibTexType [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   MEDIUM: BibTexType [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   regex: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   sortLevel: int [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- BibTexType(_regex: String, _sortLevel: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getRegex(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getSortLevel(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ valueOf(name: String): BibTexType</TD></TR>
+<TR><TD ALIGN="LEFT" >+ values(): BibTexType[]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#DCFBD5"
+];
+} 
+
+subgraph cluster_1293532493 { 
+   	label=persistency
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   BibTexPersistency1947051488[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BibTexPersistency</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ load(_path: String): Collection</TD></TR>
+<TR><TD ALIGN="LEFT" >+ save(_collection: Collection, _path: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+BinaryPersistency1947051488[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BinaryPersistency</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ load(_path: String): Collection</TD></TR>
+<TR><TD ALIGN="LEFT" >+ save(_collection: Collection, _path: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+HumanReadablePersistency1947051488[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)HumanReadablePersistency</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ load(_path: String): Collection</TD></TR>
+<TR><TD ALIGN="LEFT" >+ save(_collection: Collection, _path: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+IPersistency1947051488[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)IPersistency</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ load(_path: String): Collection</TD></TR>
+<TR><TD ALIGN="LEFT" >+ save(_collection: Collection, _path: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+PercistencyException1947051488[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)PercistencyException</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   userMessage: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ PercistencyException(message: String, _userMessage: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getUserMessage(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1789464955 { 
+   	label=database
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   DatabaseException1029653870[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DatabaseException</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   userMessage: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ DatabaseException(message: String, _userMessage: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getUserMessage(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Server1029653870[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Server</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   PASSWORD: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   SERVER_URL: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   USERNAME: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Server(_username: String, _password: String, _url: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ add(_medium: Medium, _out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- authenticate(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ delete(_medium: Medium, _out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- drop(_authHash: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getCollectionFromDatabase(_out: ProcessOutputBuffer): Collection</TD></TR>
+<TR><TD ALIGN="LEFT" >- getData(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getFreeId(_out: ProcessOutputBuffer): long</TD></TR>
+<TR><TD ALIGN="LEFT" >- md5(input: String): String</TD></TR>
+<TR><TD ALIGN="LEFT" >- postJSON(endpoint: String, payload: JSONObject): JSONObject</TD></TR>
+<TR><TD ALIGN="LEFT" >+ testAuth(_out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ testConnection(): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ServerAddressScopes1029653870[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(E)ServerAddressScopes</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   DEFAULT: ServerAddressScopes [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   GLOBAL_1: ServerAddressScopes [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   GLOBAL_2: ServerAddressScopes [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   LOCAL_HOST: ServerAddressScopes [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   LOCAL_NETWORK: ServerAddressScopes [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   searchOnStartup: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   url: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- ServerAddressScopes(_url: String, _name: String, _searchOnStartup: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >- ServerAddressScopes(_serverAddressScopes: ServerAddressScopes)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getUrl(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ isSearchOnStartup(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ valueOf(name: String): ServerAddressScopes</TD></TR>
+<TR><TD ALIGN="LEFT" >+ values(): ServerAddressScopes[]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#DCFBD5"
+];
+} 
+
+subgraph cluster_1830861979 { 
+   	label=Library
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   Collection1830861979[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Collection</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   SORTED: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   libList: ArrayList&lt;Medium&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addMedium(_bibTex: String, _out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- addMedium(medium: Medium)</TD></TR>
+<TR><TD ALIGN="LEFT" >- checkIfTitleFree(_title: String): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clear()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropMedium(_title: String, _out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropMedium(_title: String, _out: ProcessOutputBuffer, _dropAll: boolean): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dropMedium(_id: long, _out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findMedium(_title: String, _out: ProcessOutputBuffer, _reverse: boolean, _exact: boolean, _ignoreCase: boolean): Medium[]</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findMedium(_title: String, _out: ProcessOutputBuffer, _reverse: boolean): Medium[]</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findMedium(_id: long, _out: ProcessOutputBuffer): Medium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findMedium(_title: String, _out: ProcessOutputBuffer): Medium[]</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromDataBaseString(_str: String): Collection</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getDataBaseString(medium: Medium): String</TD></TR>
+<TR><TD ALIGN="LEFT" >- getNextID(_out: ProcessOutputBuffer): long</TD></TR>
+<TR><TD ALIGN="LEFT" >+ isEmpty(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ iterator(): Iterator&lt;Medium&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ length(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ merge(other: Collection)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ sort()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ sort(_reverse: boolean)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Library1830861979[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Library</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ main(argv: String[])</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1994163307 { 
+   	label=Medium
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   Book609480632[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Book</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   ISBN: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   edition: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pages: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   publicher: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   writer: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yearOfPublishing: int [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Book()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateRepresentation(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getBibtex(): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEdition(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getISBN(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getPages(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getPublicher(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getWriter(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getYearOfPublishing(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ parseFromBibTexStruct(_bibTexStruct: BibTexStruct, _out: ProcessOutputBuffer): Book</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setEdition(_edition: String): Book</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setISBN(_ISBN: String): Book</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setPages(_pages: int): Book</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setPublicher(_publicher: String): Book</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setWriter(_writer: String): Book</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setYearOfPublishing(_yearOfPublishing: int): Book</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CD609480632[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CD</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   agePolicy: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   artist: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   durationInMinutes: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   lable: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ CD()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateRepresentation(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getAgePolicy(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getArtist(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getBibtex(): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getDurationInMinutes(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getLable(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ parseFromBibTexStruct(_bibTexStruct: BibTexStruct, _out: ProcessOutputBuffer): CD</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setAgePolicy(_agePolicy: String): CD</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setArtist(_artist: String): CD</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setDurationInMinutes(_durationInMinutes: double): CD</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setLable(_lable: String): CD</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ElectronicalMedium609480632[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ElectronicalMedium</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   dataFormat: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   sizeInBytes: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   url: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ ElectronicalMedium()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateRepresentation(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getBibtex(): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getDataFormat(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getSizeInBytes(): long</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getURL(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getUrl(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ parseFromBibTexStruct(_bibTexStruct: BibTexStruct, _out: ProcessOutputBuffer): ElectronicalMedium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setDataFormat(_dataFormat: String): ElectronicalMedium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setSizeInBytes(_sizeInBytes: long): ElectronicalMedium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setURL(_url: String): ElectronicalMedium</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Medium609480632[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Medium</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   dateOfReturn: LocalDate [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   inventoryID: long [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   status: Status [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   title: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   type: BibTexType [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ checkOut(_dateOfReturn: LocalDate): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ compareTo(o: Medium): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ extendLoanPeriod(_nawDateOfReturn: LocalDate): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateRepresentation(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateShortRepresentation(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getBibtex(): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getDateOfReturn(): LocalDate</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getInventoryID(): long</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getStatus(): Status</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTitle(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getType(): BibTexType</TD></TR>
+<TR><TD ALIGN="LEFT" >+ giveBack()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setDateOfReturn(dateOfReturn: LocalDate)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setInventoryID(_inventoryID: long): Medium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setStatus(_status: Status): Medium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setTitle(_title: String): Medium</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setType(type: BibTexType)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Paper609480632[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Paper</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   ISSN: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   edition: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   number: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pages: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   volume: int [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Paper()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateRepresentation(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getBibtex(): BibTexStruct</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEdition(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getISSN(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getNumber(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getPages(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getVolume(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ parseFromBibTexStruct(_bibTexStruct: BibTexStruct, _out: ProcessOutputBuffer): Paper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setEdition(_edition: String): Paper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setISSN(_ISSN: String): Paper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setNumber(_number: int): Paper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setPages(_pages: int): Paper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setVolume(_volume: int): Paper</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Status609480632[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(E)Status</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   AVAILABLE: Status [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   CHECKED_OUT: Status [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   UNKNOWN: Status [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ valueOf(name: String): Status</TD></TR>
+<TR><TD ALIGN="LEFT" >+ values(): Status[]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#DCFBD5"
+];
+} 
+
+subgraph cluster_2069713349 { 
+   	label=user_interface
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   CLI32211832[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CLI</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   ACTIVE: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   root: Node&lt;String, ICLIEndpoint&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   scanner: Scanner [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   startUpCall: ICLIEndpoint [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ ask(_question: String): String</TD></TR>
+<TR><TD ALIGN="LEFT" >- call(_path: String, _out: ProcessOutputBuffer): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ flushOutputBuffer(_out: ProcessOutputBuffer)</TD></TR>
+<TR><TD ALIGN="LEFT" >- getProcessOutputBufferFormated(_out: ProcessOutputBuffer): String</TD></TR>
+<TR><TD ALIGN="LEFT" >- initElementaryCommands()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ registerEndpoint(_endpoint: ICLIEndpoint, _path: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ registerStartUpCall(_call: ICLIEndpoint)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ start()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ start(_noExit: boolean)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ICLIEndpoint32211832[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)ICLIEndpoint</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ call(params: String[], _out: ProcessOutputBuffer)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getProcessName(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+Node32211832[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Node&lt;T, C&gt;</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   content: C [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   outMap: Map&lt;T, Node&lt;T, C&gt;&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ get(): C</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hasContent(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ proceed(_key: T): Node&lt;T, C&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ proceedOrCreate(key: T): Node&lt;T, C&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ set(_content: C): Node&lt;T, C&gt;</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_2390489 { 
+   	label=Main
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   Main2390489[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Main</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ main(argv: String[])</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_3366 { 
+   	label=io
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   DiscardProcessOutputBuffer1419572057[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DiscardProcessOutputBuffer</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ DiscardProcessOutputBuffer()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ write(_object: Object, _severity: Severity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ write(_object: Object)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+IExceptionUserReadable1419572057[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)IExceptionUserReadable</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getUserMessage(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+Message1419572057[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Message</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   message: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   severity: Severity [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   timestamp: long [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Message(_message: String, _severity: Severity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getSeverity(): Severity</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTimestamp(): long</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setTimestamp(_timestamp: long): Message</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ProcessOutputBuffer1419572057[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ProcessOutputBuffer</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   buffer: List&lt;Message&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ ProcessOutputBuffer(_processName: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addMessage(_message: Message)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clear()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getAll(): Message[]</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getMostSevere(): Message</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getProcessName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hasMessages(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ length(): long</TD></TR>
+<TR><TD ALIGN="LEFT" >+ nl()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ replace(other: ProcessOutputBuffer)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setProcessName(_name: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ write(_object: Object, _severity: Severity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ write(_object: Object)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Severity1419572057[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(E)Severity</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   BASIC: Severity [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   ERROR: Severity [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   FATAL: Severity [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   REMARK: Severity [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   SUCCESS: Severity [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   WARNING: Severity [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   level: int [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- Severity(_level: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getLevel(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ highestSeverity(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ valueOf(name: String): Severity</TD></TR>
+<TR><TD ALIGN="LEFT" >+ values(): Severity[]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#DCFBD5"
+];
+} 
+
+'edges    
+BibTexParameter143951728 -> BibTexParameterType143951728[label="type
+[0..1]"];
+BibTexParser143951728 -> ProcessOutputBuffer1419572057[label="parseFromBibTexString() -> write()"];
+BibTexPersistency1947051488 -> BibTexStruct143951728[label="save() -> getBibTexString()"];
+BibTexPersistency1947051488 -> Medium609480632[label="save() -> getBibtex()"];
+BibTexStruct143951728 -> BibTexParameter143951728[label="parameterList
+[0..*]"];
+BibTexStruct143951728 -> BibTexType143951728[label="type
+[0..1]"];
+BinaryPersistency1947051488 -> Collection1830861979[label="load() -> sort()"];
+Book609480632 -> ISBNException1300522229[label="setISBN() -> ISBNException()"];
+Book609480632 -> ISBNUtils2060478050[label="setISBN() -> checkISBNString()"];
+Book609480632 -> ProcessOutputBuffer1419572057[label="parseFromBibTexStruct() -> write()"];
+CD609480632 -> ProcessOutputBuffer1419572057[label="parseFromBibTexStruct() -> write()"];
+CLI32211832 -> ICLIEndpoint32211832[label="root
+[0..1]"];
+CLI32211832 -> ICLIEndpoint32211832[label="startUpCall
+[0..1]"];
+CLI32211832 -> Node32211832[label="root
+[0..1]"];
+Collection1830861979 -> BibTexParser143951728[label="addMedium() -> parseFromBibTexString()"];
+Collection1830861979 -> BibTexType143951728[label="findMedium() -> getSortLevel()"];
+Collection1830861979 -> DatabaseException1029653870[label="fromDataBaseString() -> DatabaseException()"];
+Collection1830861979 -> DuplicateEntryException2060478050[label="dropMedium() -> DuplicateEntryException()"];
+Collection1830861979 -> IExceptionUserReadable1419572057[label="addMedium() -> getUserMessage()"];
+Collection1830861979 -> Medium609480632[label="libList
+[0..*]"];
+ElectronicalMedium609480632 -> ProcessOutputBuffer1419572057[label="parseFromBibTexStruct() -> write()"];
+ElectronicalMedium609480632 -> URLException604216050[label="setURL() -> URLException()"];
+ElectronicalMedium609480632 -> URLUtils2060478050[label="setURL() -> checkURLString()"];
+IExceptionUserReadable1419572057 -> BibTexException143951728[arrowhead=none, arrowtail=empty, dir=both];
+IExceptionUserReadable1419572057 -> DatabaseException1029653870[arrowhead=none, arrowtail=empty, dir=both];
+IExceptionUserReadable1419572057 -> DuplicateEntryException2060478050[arrowhead=none, arrowtail=empty, dir=both];
+IExceptionUserReadable1419572057 -> PercistencyException1947051488[arrowhead=none, arrowtail=empty, dir=both];
+IPersistency1947051488 -> BibTexPersistency1947051488[arrowhead=none, arrowtail=empty, dir=both];
+IPersistency1947051488 -> BinaryPersistency1947051488[arrowhead=none, arrowtail=empty, dir=both];
+IPersistency1947051488 -> HumanReadablePersistency1947051488[arrowhead=none, arrowtail=empty, dir=both];
+ISBNUtils2060478050 -> ISBNException1300522229[label="getIntArrayFromISBNString() -> ISBNException()"];
+Library1830861979 -> DuplicateEntryException2060478050[label="main() -> getUserMessage()"];
+Library1830861979 -> ServerAddressScopes1029653870[label="main() -> values()"];
+Main2390489 -> Library1830861979[label="main() -> main()"];
+Medium609480632 -> BibTexType143951728[label="type
+[0..1]"];
+Medium609480632 -> Book609480632[arrowhead=none, arrowtail=empty, dir=both];
+Medium609480632 -> CD609480632[arrowhead=none, arrowtail=empty, dir=both];
+Medium609480632 -> ElectronicalMedium609480632[arrowhead=none, arrowtail=empty, dir=both];
+Medium609480632 -> Paper609480632[arrowhead=none, arrowtail=empty, dir=both];
+Medium609480632 -> Status609480632[label="status
+[0..1]"];
+Message1419572057 -> Severity1419572057[label="severity
+[0..1]"];
+Paper609480632 -> ProcessOutputBuffer1419572057[label="parseFromBibTexStruct() -> write()"];
+ProcessOutputBuffer1419572057 -> DiscardProcessOutputBuffer1419572057[arrowhead=none, arrowtail=empty, dir=both];
+ProcessOutputBuffer1419572057 -> Message1419572057[label="buffer
+[0..*]"];
+Server1029653870 -> Medium609480632[label="delete() -> getInventoryID()"];
+    
+}
+@enduml

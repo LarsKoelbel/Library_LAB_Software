@@ -112,7 +112,7 @@ public class BibTexStruct {
                 try {
                     double fvalue = Double.valueOf(value.replace("{","").replace("}","").strip());
                     this.parameterList.add(new BibTexParameter().setName(name).setFvalue(fvalue).setType(parmType));
-                }catch (NumberFormatException _)
+                }catch (NumberFormatException e)
                 {
                     throw new BibTexException("Parameter type exception", "The value " + value + " for the parameter " + name + " is not a valide numerical value. Use name = {value} for string parameters."
                             + BibTexException.getTexPositionMarkerForError(_input, absoluteParsePosition));
