@@ -12,11 +12,13 @@ import Library.persistency.HumanReadablePersistency;
 import Library.user_interface.CLI;
 import Library.user_interface.ICLIEndpoint;
 import Library.utils.DuplicateEntryException;
+import Library.utils.TextUtils;
 
 import java.lang.reflect.Array;
 import java.rmi.ServerError;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Main class for managing the library
@@ -181,26 +183,43 @@ public class Library {
                         return;
                     }
 
+
+
                     // Search collection
                     Medium[] mediums = null;
                     switch (params[0])
                     {
                         case "title":
                         {
-                            if (!exactSearch)
+                            // Check for substrings
+                            String[] substrings = TextUtils.getSubstrings(title);
+                            String[] titles;
+                            if (substrings != null) titles = substrings;
+                            else titles = new String[]{title};
+
+                            for (String t : titles)
                             {
-                                mediums = collection.findMedium(title, _out);
-                            }else
-                            {
-                                if (ignoreCase)
+                                Medium[] result;
+                                if (!exactSearch)
                                 {
-                                    mediums = collection.findMedium(title, _out, false, true, true);
-                                }
-                                else
+                                    result = collection.findMedium(t, _out);
+
+                                }else
                                 {
-                                    mediums = collection.findMedium(title, _out, false, true, false);
+                                    if (ignoreCase)
+                                    {
+                                        result = collection.findMedium(t, _out, false, true, true);
+                                    }
+                                    else
+                                    {
+                                        result = collection.findMedium(t, _out, false, true, false);
+                                    }
                                 }
+
+                                if (mediums != null && result != null) mediums = Stream.concat(Arrays.stream(mediums), Arrays.stream(result)).toArray(Medium[]::new);
+                                else mediums = result;
                             }
+
                             break;
                         }
                         case "id":
@@ -292,9 +311,36 @@ public class Library {
                         bibTex.append(x).append(" ");
                     }
 
-                    if(collection.addMedium(bibTex.toString().strip(), _out)){
-                        _out.write("Done", Severity.SUCCESS);
+                    String[] bibtex = new String[] {bibTex.toString()};
+
+                    // Check for substrings
+                    String[] substrings = TextUtils.getSubstrings(bibtex[0]);
+                    if (substrings != null)  bibtex = substrings;
+
+                    for (String b : bibtex)
+                    {
+                        // Syntax check
+                        b = b.replace("'", "\\'");
+
+                        if(collection.addMedium(b.strip(), _out)){
+                            _out.write("Done with: " + b, Severity.SUCCESS);
+                        }else
+                        {
+                            _out.write("Failed on: " + b, Severity.WARNING);
+                        }
+
+                        if(bibTex.length() > 1)
+                        {
+                            // Wait a little to make sure the server hase time to compute the changes
+                            cli.flushOutputBuffer(_out);
+                            //try {
+                                //Thread.sleep(500);
+                            //} catch (InterruptedException e) {
+                            //    return;
+                            //}
+                        }
                     }
+
 
                 }
 

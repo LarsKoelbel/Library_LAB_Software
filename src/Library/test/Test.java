@@ -9,6 +9,7 @@ import Library.io.ProcessOutputBuffer;
 import Library.persistency.BibTexPersistency;
 import Library.persistency.BinaryPersistency;
 import Library.persistency.HumanReadablePersistency;
+import Library.utils.TextUtils;
 
 import java.util.Arrays;
 
@@ -23,9 +24,20 @@ public class Test {
      */
     public static void main(String[] argv)
     {
-        test_Server();
+        test_textUtils();
     }
 
+    /**
+     * Test text utils
+     */
+    private static void test_textUtils()
+    {
+        String[] substrings = TextUtils.getSubstrings("hello \"This is a string\" this isnt \"this is another string\"");
+        System.out.println(Arrays.toString(substrings));
+
+        substrings = TextUtils.getSubstrings("This string has no substrings");
+        System.out.println(Arrays.toString(substrings));
+    }
 
     /**
      * Test database server

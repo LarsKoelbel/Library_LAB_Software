@@ -89,6 +89,7 @@ list -l -d
 search <selector> [options] <query>
 ```
 
+
 **Selectors:**
 | Selector | Description |
 |:----------|:-------------|
@@ -104,6 +105,10 @@ search <selector> [options] <query>
 | `-d` | Include database string |
 | `-e` | Use exact match instead of substring |
 | `-ignore-case` | Ignore case in exact match |
+
+**Note:**  
+You can provide **multiple queries**. The command will return entries that match **any** of the provided titles or IDs. For example:
+
 
 **Examples:**
 ```
@@ -121,8 +126,15 @@ search id 42
 add <BibTeX_entry>
 ```
 
+
 **Description:**  
 Adds a new medium from a BibTeX formatted entry.
+
+**Note:**  
+You can add **multiple BibTeX entries at once** by enclosing each entry in quotes. For example:
+```
+add "@book{python, title={Learning Python}, author={Mark Lutz}, year={2013}}" "@book{ai, title={AI Basics}, author={John Doe}, year={2020}}"
+```
 
 **Example:**
 ```
@@ -322,11 +334,16 @@ list -l | blocks with Journal | grep 2020
 grep <text>
 ```
 
+
 **Description:**  
 Filters the current process output and keeps only the lines  
 that contain the specified text (case-insensitive).
 
+**Note:**  
+You can provide **multiple parameters**: grep "Python" "AI". Each parameter must be enclosed in quotes to be treated separately. The command will match lines containing **any** of the provided texts.
+
 **Example:**
+
 ```
 list -l | grep Python
 ```
@@ -340,11 +357,16 @@ list -l | grep Python
 blocks with <text>
 ```
 
+
 **Description:**  
 Filters complete message blocks that contain a specific text anywhere in the block.  
 Useful for filtering grouped output (like detailed book entries) instead of individual lines.
 
+**Note:**  
+You can provide **multiple parameters**: blocks with "AI" "Python". Each parameter must be enclosed in quotes to be treated separately. The command will match blocks containing **any** of the provided texts.
+
 **Examples:**
+
 ```
 list -l | blocks with AI
 search title "Data" | blocks with available
@@ -388,3 +410,28 @@ Displays this help overview.
 
 You can combine commands using `|` to chain filters  
 and view results dynamically.
+
+Commands like `search`, `add`, `grep`, and `blocks with` support multiple input parameters.
+
+- For `search`, you can provide multiple queries to search for any of the titles or IDs. Example: 
+<br>``search title "Python" "AI" "Machine Learning"``
+
+
+- For `add`, you can add multiple BibTeX entries at once by enclosing each in quotes. Example: 
+<br>
+`add "@book{python, title={Learning Python}, author={Mark Lutz}, year={2013}}" "@book{ai, title={AI Basics}, author={John Doe}, year={2020}}"`
+
+
+- For `grep` and `blocks with`, each search parameter must be enclosed in quotes. The command will match lines or blocks containing **any** of the provided texts. Examples:  
+```
+list -l | grep "Python" "Machine Learning"
+list -l | blocks with "AI" "Python"
+```
+
+
+Important: The `drop` command does **not** support multiple input parameters.
+
+The blocks with command can also be used to filter the help info for specific commands, e.g.:
+```
+? | blocks with "blocks with"
+```

@@ -166,9 +166,13 @@ public class CLI {
                     sb.append(x).append(" ");
                 }
 
-                String regex = sb.toString().strip();
+                String[] regex =  {sb.toString().strip()};
 
-                ProcessOutputBuffer processOutputBuffer = new ProcessOutputBuffer("grep-operation::" + regex);
+                // Check if the string has substrings
+                String[] substrings = TextUtils.getSubstrings(regex[0]);
+                if (substrings != null) regex = substrings;
+
+                ProcessOutputBuffer processOutputBuffer = new ProcessOutputBuffer("grep-operation::" + Arrays.toString(regex));
 
                 for (Message m : _out.getAll())
                 {
@@ -176,7 +180,16 @@ public class CLI {
 
                     for (String line : lines)
                     {
-                        if (line.toLowerCase().contains(regex.toLowerCase())) {
+                        boolean goodLine = false;
+                        for (String r : regex)
+                        {
+                            if (line.toLowerCase().contains(r.toLowerCase())) {
+                                goodLine = true;
+                            }
+                        }
+
+                        if (goodLine)
+                        {
                             processOutputBuffer.write(new Message(line, m.getSeverity()).setTimestamp(m.getTimestamp()));
                         }
                     }
@@ -203,9 +216,14 @@ public class CLI {
                     sb.append(x).append(" ");
                 }
 
-                String regex = sb.toString().strip();
 
-                ProcessOutputBuffer processOutputBuffer = new ProcessOutputBuffer("block-grep-operation::" + regex);
+                String[] regex =  {sb.toString().strip()};
+
+                // Check if the string has substrings
+                String[] substrings = TextUtils.getSubstrings(regex[0]);
+                if (substrings != null) regex = substrings;
+
+                ProcessOutputBuffer processOutputBuffer = new ProcessOutputBuffer("block-grep-operation::" + Arrays.toString(regex));
 
                 StringBuilder block = new StringBuilder();
                 boolean goodBlock = false;
@@ -221,9 +239,13 @@ public class CLI {
                     for (String line : lines)
                     {
                         block.append(line).append("\n");
-                        if (line.contains(regex)) {
-                            goodBlock = true;
+                        for (String r : regex)
+                        {
+                            if (line.toLowerCase().contains(r.toLowerCase())) {
+                                goodBlock = true;
+                            }
                         }
+
                         if (line.isBlank())
                         {
                             if (goodBlock)
