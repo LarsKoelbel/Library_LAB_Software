@@ -823,6 +823,7 @@ public class Library {
                     }else
                     {
                         server = null;
+                        _out.write("Server connection failed on the scope: " + scope + ". Maybe try a different scope...", Severity.REMARK);
                     }
                 }
 
@@ -860,7 +861,7 @@ public class Library {
         cli.registerStartUpCall(new ICLIEndpoint() {
             @Override
             public void call(String[] params, ProcessOutputBuffer _out) {
-                _out.write("Checking server availability...");
+                _out.write("Checking server availability. This might take a while, please wait...");
                 // Check server for all scopes not marked skip
                 boolean serverAvailable = false;
                 ArrayList<ServerAddressScopes> serverAddressScopesArrayList = new ArrayList<>();
