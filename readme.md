@@ -6,6 +6,14 @@ Lars Kölbel - HOST 2025
 
 ---
 
+## UML Overview
+This overview is automatically generated and is missing some data.
+<br>It should only serve as a rough overview
+
+![UML Overview](plantUML/structure-by-class.svg "UML Overview")
+
+---
+
 ## CLI - Documentation
 
 # 📘 Library Management CLI – Command Reference
