@@ -1,7 +1,12 @@
 package Library.Medium;
 
+import Library.Library;
 import Library.bib_tex.BibTexStruct;
 import Library.bib_tex.BibTexType;
+import Library.database.IServerAddress;
+import Library.io.Communication;
+import Library.io.ProcessOutputBuffer;
+import Library.io.Severity;
 
 import java.io.Serializable;
 import java.security.cert.TrustAnchor;
@@ -80,10 +85,26 @@ abstract public class Medium implements Comparable<Medium>, Serializable {
     /**
      * Check out a medium if it is available
      * @param _dateOfReturn Date when the book has to be returned
+     * @param _out Process output buffer
      * @return Success state (True if success)
      */
-    public boolean checkOut(LocalDate _dateOfReturn)
+    public boolean checkOut(LocalDate _dateOfReturn, ProcessOutputBuffer _out)
     {
+        // Database integrity, check for server availability
+        if(Library.server != null)
+        {
+            if (Library.server.testAuth(Communication.NULL_BUFFER))
+            {
+                if(!Library.server.modStatus(this, _out, Status.CHECKED_OUT)) return false;
+            }
+            else
+            {
+                _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                        "changing medium state in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                return false;
+            }
+        }
+
         if (status == Status.AVAILABLE)
         {
             status = Status.CHECKED_OUT;
@@ -96,11 +117,28 @@ abstract public class Medium implements Comparable<Medium>, Serializable {
 
     /**
      * Return a medium
+     * @param _out Process output buffer
      */
-    public void giveBack()
+    public boolean giveBack(ProcessOutputBuffer _out)
     {
+        // Database integrity, check for server availability
+        if(Library.server != null)
+        {
+            if (Library.server.testAuth(Communication.NULL_BUFFER))
+            {
+                if(!Library.server.modStatus(this, _out, Status.AVAILABLE)) return false;
+            }
+            else
+            {
+                _out.write("The current session was connected to a server, but the server connection was lost. Database integrity does not allow " +
+                        "changing medium state in unclear operational status. Either reconnect to the server or disconnect officially to proceed.", Severity.WARNING);
+                return false;
+            }
+        }
         status = Status.AVAILABLE;
         dateOfReturn = null;
+
+        return true;
     }
 
     /**

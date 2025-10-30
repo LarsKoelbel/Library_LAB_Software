@@ -6,9 +6,9 @@ package Library.database;
 */
 public enum ServerAddressScopes {
     LOCAL_HOST("http://localhost:5000", "localhost", true),
-    LOCAL_NETWORK("http://192.168.178.159:5000", "local network", true),
-    GLOBAL_1("http://ypypbec5rmupitzpk.myfritz.net/library", "global (internet) 1", true),
-    GLOBAL_2("http://ypypbec5rmupitzpk:5000", "global (internet) 2", true),
+    LOCAL_NETWORK("http://192.168.178.159:5000", "local network", false),
+    GLOBAL_1("http://ypypbec5rmupitzpk.myfritz.net/library", "global (internet) 1", false),
+    GLOBAL_2("http://ypypbec5rmupitzpk:5000", "global (internet) 2", false),
     DEFAULT(LOCAL_NETWORK);
 
     public final String url;

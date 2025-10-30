@@ -2,6 +2,7 @@ package Library.database;
 
 import Library.Collection;
 import Library.Medium.Medium;
+import Library.Medium.Status;
 import Library.io.ProcessOutputBuffer;
 
 import java.io.*;
@@ -254,6 +255,62 @@ public class Server {
             if (dataResponse.getString("status").equalsIgnoreCase("ok")) return true;
             else {
                 _out.write("Dropping object from database failed. Message from server: " + dataPayload.getString("message"), Severity.ERROR);
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            if (e instanceof ConnectException)
+            {
+                _out.write("Can't connect to server. Check internet connection or contact administrator", Severity.ERROR);
+            } else if (e instanceof DatabaseException)
+            {
+                _out.write(((DatabaseException) e).getUserMessage(), Severity.ERROR);
+            } else
+            {
+                _out.write("Possibly fatale error during server communication. Please contact administrator: " + e.getClass() + " :: " + e.getMessage(), Severity.FATAL);
+            }
+
+            return false;
+
+        }
+    }
+
+    /**
+     * Modify the status of a medium
+     * @param _medium The medium
+     * @param _out Process output buffer
+     * @param _status Status to be set
+     * @return Status
+     */
+    public boolean modStatus(Medium _medium, ProcessOutputBuffer _out, Status _status)
+    {
+        try {
+
+            String id = String.valueOf(_medium.getInventoryID());
+            String statusString = "-1";
+
+            switch (_status)
+            {
+                case Status.AVAILABLE -> statusString = "1";
+                case Status.CHECKED_OUT -> statusString = "0";
+            }
+
+            String authDigest = authenticate();
+
+            // STEP 3: Request data
+            JSONObject dataPayload = new JSONObject();
+            dataPayload.put("username", USERNAME);
+            dataPayload.put("auth", authDigest);
+            dataPayload.put("id", id);
+            dataPayload.put("status", statusString);
+            JSONObject dataResponse = postJSON("/mod-status", dataPayload);
+
+            drop(authDigest);
+
+            if (dataResponse.getString("status").equalsIgnoreCase("ok")) return true;
+            else {
+                _out.write("Changing status failed on server side. Message from server: " + dataPayload.getString("message"), Severity.ERROR);
                 return false;
             }
         }
