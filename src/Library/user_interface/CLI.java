@@ -6,8 +6,12 @@ import Library.io.Severity;
 import Library.utils.IColorCodes;
 import Library.utils.TextUtils;
 
+import java.io.*;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -25,7 +29,7 @@ public class CLI {
 
     private static final String VERSION = "1.04.3-alpha";
 
-
+    private static final ArrayList<String> HISTORY = new ArrayList<>();
 
     /**
      * Add a new endpoint (command) to the cli
@@ -44,6 +48,8 @@ public class CLI {
         }
 
         current.set(_endpoint);
+
+        HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Registered new endpoint", IColorCodes.PURPLE) + " :: %s", LocalDate.now(), _path));
     }
 
     /**
@@ -65,12 +71,23 @@ public class CLI {
             if (next == null)
             {
                 _out.write("Unknown command. Unknown keyword " + s, Severity.ERROR);
+                HISTORY.add(TextUtils.style("Unknown Command", IColorCodes.YELLOW + IColorCodes.BOLD) + " :: " + _path + " :: Unknown keyword --> " + s);
                 return false;
             }
             if (next.hasContent())
             {
                 String[] parms = path.subList(level + 1, path.size()).toArray(new String[0]);
-                next.get().call(parms, _out);
+                long start = System.currentTimeMillis();
+                HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Calling process", IColorCodes.YELLOW) + " :: %s", LocalDate.now(), next.get().getProcessName()));
+                next.get().call(parms, _out, this);
+                long finish = System.currentTimeMillis();
+                Message mostSevereMessage = _out.hasMessages() ? _out.getMostSevere() : null;
+                HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Finished process", IColorCodes.GREEN) + " :: %s :: ExecTime=%dms :: RetSeverity=%s --> %s",
+                        LocalDate.now(),
+                        next.get().getProcessName(),
+                        finish - start,
+                        mostSevereMessage != null ? mostSevereMessage.getSeverity() : "null",
+                        mostSevereMessage != null ? mostSevereMessage.toString().replace("\n", " ### ") : "null"));
                 if (_out.getProcessName() == null) _out.setProcessName(next.get().getProcessName());
                 return true;
             }
@@ -128,8 +145,11 @@ public class CLI {
      */
     public String ask(String _question)
     {
+        HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Call to cli ask", IColorCodes.PURPLE) + " :: %s", LocalDate.now(), _question));
         System.out.print(_question);
-        return scanner.nextLine();
+        String r = scanner.nextLine();
+        HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Ask returned with result", IColorCodes.PURPLE) + " :: %s", LocalDate.now(), r));
+        return r;
     }
 
     /**
@@ -157,7 +177,7 @@ public class CLI {
     {
         this.registerEndpoint(new ICLIEndpoint() {
             @Override
-            public void call(String[] params, ProcessOutputBuffer _out) {
+            public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
                 if (params.length <= 0) return;
                 StringBuilder sb = new StringBuilder();
 
@@ -207,7 +227,7 @@ public class CLI {
 
         this.registerEndpoint(new ICLIEndpoint() {
             @Override
-            public void call(String[] params, ProcessOutputBuffer _out) {
+            public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
                 if (params.length <= 0) return;
                 StringBuilder sb = new StringBuilder();
 
@@ -275,7 +295,7 @@ public class CLI {
 
         this.registerEndpoint(new ICLIEndpoint() {
             @Override
-            public void call(String[] params, ProcessOutputBuffer _out) {
+            public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
                 _out.write(ICLIHelpContainer.CLI_HELP);
             }
 
@@ -284,6 +304,92 @@ public class CLI {
                 return "cli-help";
             }
         }, "?");
+
+        //Show command
+        this.registerEndpoint(new ICLIEndpoint() {
+            @Override
+            public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
+                // Check parameter length
+                if (params.length <= 0)
+                {
+                    _out.write("No object selected to show", Severity.ERROR);
+                    return;
+                }
+
+                switch (params[0])
+                {
+                    case "history":
+                    {
+                        if (HISTORY.size() > 0)
+                        {
+                            for (String x : HISTORY)
+                            {
+                                _out.write(x);
+                            }
+                            return;
+                        }
+
+                        _out.write("History is empty");
+
+                        break;
+                    }
+                    default:
+                    {
+                        _out.write("Cant find object to show: " + params[0], Severity.ERROR);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public String getProcessName() {
+                return "cli-show";
+            }
+        }, "cli show");
+
+        // Dump output buffer to file
+        this.registerEndpoint(new ICLIEndpoint() {
+            @Override
+            public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
+                // Get the output
+                if (_out.hasMessages())
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    for (Message x : _out.getAll())
+                    {
+                        sb.append(x).append("\n");
+                    }
+
+                    // Get the path
+                    if (params.length <= 0)
+                    {
+                        _out.write("No path to dump to given", Severity.ERROR);
+                        return;
+                    }
+
+                    // Write output to file
+                    try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(params[0])))
+                    {
+                        bufferedWriter.write(sb.toString());
+                        _out.write("File was written successfully", Severity.SUCCESS);
+                    } catch (IOException e) {
+                        _out.write("The system cant find the specified path or access was denied", Severity.ERROR);
+                        return;
+                    }
+                }
+                else
+                {
+                    _out.write("Dump: Output buffer is empty. Nothing to dump", Severity.WARNING);
+                    return;
+                }
+            }
+
+            @Override
+            public String getProcessName() {
+                return "cli-dump-output";
+            }
+        }, "dump");
     }
 
     /**
@@ -292,6 +398,7 @@ public class CLI {
      */
     public void flushOutputBuffer(ProcessOutputBuffer _out)
     {
+        HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Flushing output buffer", IColorCodes.PURPLE) + " :: %s", LocalDate.now(), _out.getProcessName()));
         System.out.println(getProcessOutputBufferFormated(_out));
         _out.clear();
     }
@@ -309,7 +416,7 @@ public class CLI {
             // Exit command is automatically set up
             this.registerEndpoint(new ICLIEndpoint() {
                 @Override
-                public void call(String[] params, ProcessOutputBuffer _out) {
+                public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
                     ACTIVE = false;
                 }
 
@@ -332,7 +439,8 @@ public class CLI {
         if(startUpCall != null)
         {
             ProcessOutputBuffer out = new ProcessOutputBuffer("cli-startup");
-            startUpCall.call(null, out);
+            HISTORY.add(String.format(Locale.ENGLISH, "%s :: " + TextUtils.style("Executing startup call", IColorCodes.CYAN) + " :: %s", LocalDate.now(), out.getProcessName()));
+            startUpCall.call(null, out, this);
 
             if(out.hasMessages())
             {

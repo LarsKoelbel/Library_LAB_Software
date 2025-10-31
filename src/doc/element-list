@@ -7,4 +7,5 @@ Library.Medium
 Library.persistency
 Library.test
 Library.user_interface
+Library.user_interface.cli_commands
 Library.utils

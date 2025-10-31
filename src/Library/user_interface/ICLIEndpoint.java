@@ -11,8 +11,9 @@ public interface ICLIEndpoint {
      * Function to be called by the CLI
      * @param params Parameters from the cli
      * @param _out Output buffer
+     * @param _cli The cli calling the endpoint
      */
-    void call(String[] params, ProcessOutputBuffer _out);
+    void call(String[] params, ProcessOutputBuffer _out, CLI _cli);
 
     /**
      * Get the name of the running process
