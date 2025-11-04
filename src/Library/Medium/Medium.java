@@ -95,7 +95,7 @@ abstract public class Medium implements Comparable<Medium>, Serializable {
         {
             if (Library.server.testAuth(Communication.NULL_BUFFER))
             {
-                if(!Library.server.modStatus(this, _out, Status.CHECKED_OUT)) return false;
+                if(!Library.server.modStatus(this, _out, Status.CHECKED_OUT, _dateOfReturn)) return false;
             }
             else
             {
@@ -126,7 +126,7 @@ abstract public class Medium implements Comparable<Medium>, Serializable {
         {
             if (Library.server.testAuth(Communication.NULL_BUFFER))
             {
-                if(!Library.server.modStatus(this, _out, Status.AVAILABLE)) return false;
+                if(!Library.server.modStatus(this, _out, Status.AVAILABLE, null)) return false;
             }
             else
             {

@@ -8,6 +8,9 @@ import Library.io.Severity;
 import Library.user_interface.CLI;
 import Library.user_interface.ICLIEndpoint;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 /**
 * Set the status of a medium (checked_out or available)
 * @author lkoeble 21487
@@ -40,8 +43,8 @@ public class StatusSet implements ICLIEndpoint {
 
                 Status status = null;
 
-                if(params[1].toLowerCase().contains("available")) status = Status.AVAILABLE;
-                else if (params[1].toLowerCase().contains("checked-out")) status = Status.CHECKED_OUT;
+                if("available".contains(params[1].toLowerCase())) status = Status.AVAILABLE;
+                else if ("checked-out".contains(params[1].toLowerCase())) status = Status.CHECKED_OUT;
 
                 if (status == null)
                 {
@@ -49,11 +52,40 @@ public class StatusSet implements ICLIEndpoint {
                     return;
                 }
 
+                LocalDate date = null;
+                // Check for date
+                if(status == Status.CHECKED_OUT)
+                {
+                    if (params.length < 3)
+                    {
+                        _out.write("No return date given", Severity.ERROR);
+                        return;
+                    }else
+                    {
+                        // Check the date
+                        try
+                        {
+                            date = LocalDate.parse(params[2]);
+
+                            if (date.isBefore(LocalDate.now()))
+                            {
+                                _out.write("The provided return date is in the past", Severity.ERROR);
+                                return;
+                            }
+                        }catch (DateTimeParseException e)
+                        {
+                            _out.write("The provided date was not in the right format YYYY-MM-DD", Severity.ERROR);
+                            return;
+                        }
+                    }
+
+                }
+
                 boolean completeOnServerSide = false;
 
                 switch (status)
                 {
-                    case Status.CHECKED_OUT -> completeOnServerSide = medium.checkOut(null, _out);
+                    case Status.CHECKED_OUT -> completeOnServerSide = medium.checkOut(date, _out);
                     case Status.AVAILABLE -> completeOnServerSide = medium.giveBack(_out);
                 }
 

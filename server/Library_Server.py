@@ -1,6 +1,12 @@
 import mysql.connector as db
 from flask import Flask, request, jsonify
-import random, time, hashlib
+import random, time, hashlib, datetime
+
+## GLOBAL COUNTERS ##
+
+TRAFIC_TOTAL = 0
+START_TIME = datetime.datetime.now()
+
 
 class Database:
 
@@ -63,6 +69,18 @@ class Server:
         self.sessions = {}
         self.database = database
 
+        ## Testing ##
+
+        @self.app.route('/', methods=['GET'])
+        def test_get():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
+
+            return jsonify({"server_up": "true",
+                            "trafic_total": TRAFIC_TOTAL,
+                            "started_at": START_TIME,
+                            "uptime": str(datetime.datetime.now() - START_TIME)})
+
         ## Authentification ##
 
         def vallidate_user(data, sessions) -> bool:
@@ -74,6 +92,8 @@ class Server:
 
         @self.app.route('/auth/start', methods=['POST'])
         def auth_start():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             data = request.get_json()
             username = data.get('username')
 
@@ -93,6 +113,8 @@ class Server:
 
         @self.app.route('/auth/verify', methods=['POST'])
         def auth_verify():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             data = request.get_json()
             username = data.get('username')
             response = data.get('response')
@@ -113,6 +135,8 @@ class Server:
 
         @self.app.route('/drop', methods=['POST'])
         def drop_connection():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             # Get JSON data sent from the Java client
             data = request.get_json()
             self.log("Received from Java: " + str(data))
@@ -133,6 +157,8 @@ class Server:
 
         @self.app.route('/test', methods=['POST'])
         def connection_test():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
 
             self.log(f"[CONNECTION TEST]")
 
@@ -143,6 +169,8 @@ class Server:
 
         @self.app.route('/get/data/all', methods=['POST'])
         def get_data():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             # Get JSON data sent from the Java client
             data = request.get_json()
             self.log("Received from Java: " + str(data))
@@ -246,6 +274,8 @@ class Server:
 
         @self.app.route('/get/free-id', methods=['POST'])
         def get_free_id():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             # Get a free id from the server
             data = request.get_json()
             self.log("Received from Java: " + str(data))
@@ -265,6 +295,8 @@ class Server:
 
         @self.app.route('/add', methods=['POST'])
         def add():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             data = request.get_json()
             self.log("Received from Java: " + str(data))
 
@@ -322,6 +354,8 @@ class Server:
 
         @self.app.route('/delete', methods=['POST'])
         def delete():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
             data = request.get_json()
             self.log("Received from Java: " + str(data))
 
@@ -355,6 +389,41 @@ class Server:
 
             # Insert into database
             result = self.database.execute(command)
+
+            response_data = {
+                "status": "ok"
+            }
+
+            # Send response as JSON
+            return jsonify(response_data)
+
+        @self.app.route('/mod-status', methods=['POST'])
+        def mod_status():
+            global TRAFIC_TOTAL
+            TRAFIC_TOTAL += 1
+            data = request.get_json()
+            self.log("Received from Java: " + str(data))
+
+            if(not vallidate_user(data, self.sessions)):
+                return jsonify({"status": "not permitted"}), 403
+
+            id = data.get('id')
+            status = data.get('status')
+            if status == '0':
+                date = data.get('date')
+            else:
+                date = None
+
+
+            print('\n\n\n', data, '\n\n\n')
+
+            # Set the status in the database
+            self.database.execute(f"update Media set status = {status} where id = {id}")
+            if date:
+                self.database.execute(f"update Media set dateOfReturn = '{date}' where id = {id}")
+            else:
+                self.database.execute(f"update Media set dateOfReturn = NULL where id = {id}")
+
 
             response_data = {
                 "status": "ok"

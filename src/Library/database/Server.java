@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -281,9 +282,10 @@ public class Server {
      * @param _medium The medium
      * @param _out Process output buffer
      * @param _status Status to be set
+     * @param _dateOfReturn Date of return (only used for checkout)
      * @return Status
      */
-    public boolean modStatus(Medium _medium, ProcessOutputBuffer _out, Status _status)
+    public boolean modStatus(Medium _medium, ProcessOutputBuffer _out, Status _status, LocalDate _dateOfReturn)
     {
         try {
 
@@ -304,6 +306,7 @@ public class Server {
             dataPayload.put("auth", authDigest);
             dataPayload.put("id", id);
             dataPayload.put("status", statusString);
+            dataPayload.put("date", _dateOfReturn != null ? _dateOfReturn.toString() : "NULL");
             JSONObject dataResponse = postJSON("/mod-status", dataPayload);
 
             drop(authDigest);
