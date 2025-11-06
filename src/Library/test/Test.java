@@ -24,7 +24,14 @@ public class Test {
      */
     public static void main(String[] argv)
     {
-        test_textUtils();
+        // Tasks tests here
+        // Task 4 + 5
+            test_Collection();
+        // Task 6
+            test_Persistency();
+        // Task 7 - Demonstration im CLI
+        // Task 8 - Demonstration im CLI
+
     }
 
     /**
@@ -114,12 +121,6 @@ public class Test {
 
         System.out.println(out);
 
-        out = new ProcessOutputBuffer("test-add-existing");
-
-        collection.addMedium("@journal{title = {Journal of AI Research}, issn = {1076-9757}, volume = 58, number = 12, pages = 200, edition = {first}}", out);
-
-        System.out.println(out);
-
         out = new ProcessOutputBuffer("test-id-rotation");
 
         collection.addMedium("@journal{title = {New}, issn = {1076-9757}, volume = 58, number = 12, pages = 200, edition = {first}}", out);
@@ -179,13 +180,13 @@ public class Test {
 
         HumanReadablePersistency humanReadablePersistency = new HumanReadablePersistency();
 
-        humanReadablePersistency.save(collection, "./src/Library/data/human-readable.lib");
+        humanReadablePersistency.save(collection, "./src/Library/data/human-readable-test.lib");
 
         BinaryPersistency binaryPersistency = new BinaryPersistency();
 
-        binaryPersistency.save(collection, "./src/Library/data/objects.lib.bin");
+        binaryPersistency.save(collection, "./src/Library/data/objects-test.lib.bin");
 
-        Collection newCollection = binaryPersistency.load("./src/Library/data/objects.lib.bin");
+        Collection newCollection = binaryPersistency.load("./src/Library/data/objects-test.lib.bin");
 
         System.out.println("Loaded data from file");
 
@@ -196,9 +197,9 @@ public class Test {
 
         BibTexPersistency bibTexPersistency = new BibTexPersistency();
 
-        bibTexPersistency.save(collection, "./src/Library/data/objects.lib.bibtex");
+        bibTexPersistency.save(collection, "./src/Library/data/objects-test.lib.bibtex");
 
-        newCollection = bibTexPersistency.load("./src/Library/data/objects.lib.bibtex");
+        newCollection = bibTexPersistency.load("./src/Library/data/objects-test.lib.bibtex");
 
         System.out.println("Loaded data from bibtex file");
 

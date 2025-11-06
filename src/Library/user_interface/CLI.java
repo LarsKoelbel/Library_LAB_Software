@@ -254,7 +254,7 @@ public class CLI {
                 {
                     lastSeverity = m.getSeverity();
                     lastTimestamp = m.getTimestamp();
-                    String[] lines = m.toString().split("\n");
+                    String[] lines = m.toString().split("\n", -1);
 
                     for (String line : lines)
                     {
@@ -270,7 +270,7 @@ public class CLI {
                         {
                             if (goodBlock)
                             {
-                                processOutputBuffer.write(new Message(block.toString(), lastSeverity).setTimestamp(lastTimestamp));
+                                processOutputBuffer.write(new Message(block.toString() + "\n", lastSeverity).setTimestamp(lastTimestamp));
                                 goodBlock = false;
                             }
                             block = new StringBuilder();

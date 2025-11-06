@@ -5,8 +5,8 @@ package Library.database;
 * @author lkoeble 21487
 */
 public enum ServerAddressScopes {
-    LOCAL_HOST("https://localhost:5000", "localhost", true),
-    LOCAL_NETWORK("http://192.168.178.159:5000", "local network", true),
+    LOCAL_HOST("https://localhost:5000", "localhost", false),
+    LOCAL_NETWORK("http://192.168.178.159:5000", "local network", false),
     GLOBAL_1("https://ypdpbec5rmupizpk.myfritz.net/library/", "global (internet) 1", true),
     GLOBAL_2("https://ypypbec5rmupitzpk:5000", "global (internet) 2", false),
     DEFAULT(LOCAL_NETWORK);
