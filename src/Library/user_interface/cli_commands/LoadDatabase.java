@@ -1,6 +1,6 @@
 package Library.user_interface.cli_commands;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Library;
 import Library.database.Server;
 import Library.io.Communication;
@@ -20,7 +20,7 @@ public class LoadDatabase implements ICLIEndpoint {
     public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
 
         Server server = Library.server;
-        Collection collection = Library.collection;
+        Archive collection = Library.collection;
 
         if (server == null || !server.testAuth(Communication.NULL_BUFFER))
         {
@@ -33,7 +33,7 @@ public class LoadDatabase implements ICLIEndpoint {
             // Check if the collection is empty
             if(collection.isEmpty())
             {
-                Collection c = server.getCollectionFromDatabase(_out);
+                Archive c = server.getCollectionFromDatabase(_out);
                 if(c != null)
                 {
                     if (c.isEmpty())

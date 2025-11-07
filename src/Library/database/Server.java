@@ -1,6 +1,6 @@
 package Library.database;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Medium.Medium;
 import Library.Medium.Status;
 import Library.io.ProcessOutputBuffer;
@@ -10,8 +10,6 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
 
 import Library.io.Severity;
 import org.json.JSONObject;
@@ -193,7 +191,7 @@ public class Server {
     {
         try {
 
-            String data = Collection.getDataBaseString(_medium);
+            String data = Archive.getDataBaseString(_medium);
 
             String authDigest = authenticate();
 
@@ -240,7 +238,7 @@ public class Server {
     {
         try {
 
-            String data = Collection.getDataBaseString(_medium);
+            String data = Archive.getDataBaseString(_medium);
 
             String authDigest = authenticate();
 
@@ -340,7 +338,7 @@ public class Server {
      * @param _out Output buffer
      * @return The collection or null
      */
-    public Collection getCollectionFromDatabase(ProcessOutputBuffer _out)
+    public Archive getCollectionFromDatabase(ProcessOutputBuffer _out)
     {
         try {
             String data = getData();
@@ -349,9 +347,9 @@ public class Server {
                 return null;
             }
 
-            Collection collection = Collection.fromDataBaseString(data);
+            Archive collection = Archive.fromDataBaseString(data);
             _out.write("Elements collected from server: " + collection.length(), Severity.SUCCESS);
-            return Collection.fromDataBaseString(data);
+            return Archive.fromDataBaseString(data);
         }
         catch (Exception e)
         {

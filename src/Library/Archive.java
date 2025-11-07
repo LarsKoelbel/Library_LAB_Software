@@ -1,7 +1,6 @@
 package Library;
 
 import Library.Medium.*;
-import Library.bib_tex.BibTexException;
 import Library.bib_tex.BibTexParser;
 import Library.bib_tex.BibTexType;
 import Library.database.DatabaseException;
@@ -21,7 +20,7 @@ import java.util.*;
  * Main class for the management of all the entries in the library
  * @author lkoebel 21487
  */
-public class Collection implements Iterable<Medium>, Serializable {
+public class Archive implements Iterable<Medium>, Serializable {
     private final ArrayList<Medium> libList = new ArrayList<>();
     private boolean SORTED = false;
 
@@ -388,7 +387,7 @@ public class Collection implements Iterable<Medium>, Serializable {
      * Merge another collection into this one
      * @param other Other collection
      */
-    public void merge(Collection other)
+    public void merge(Archive other)
     {
         if (other.isEmpty()) return;
         for(Medium m : other)
@@ -507,10 +506,10 @@ public class Collection implements Iterable<Medium>, Serializable {
      * @param _str The database string
      * @return The collection or null
      */
-    public static Collection fromDataBaseString(String _str)
+    public static Archive fromDataBaseString(String _str)
     {
 
-        Collection collection = new Collection();
+        Archive collection = new Archive();
 
         try
         {

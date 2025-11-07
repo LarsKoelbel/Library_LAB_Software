@@ -7,7 +7,7 @@ import Library.io.Severity;
 import Library.user_interface.CLI;
 import Library.user_interface.ICLIEndpoint;
 import Library.utils.DuplicateEntryException;
-import Library.Collection;
+import Library.Archive;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class Drop implements ICLIEndpoint {
     @Override
     public void call(String[] params, ProcessOutputBuffer _out, CLI _cli) {
 
-        Collection collection = Library.collection;
+        Archive collection = Library.collection;
         Server server = Library.server;
 
         // Check server status

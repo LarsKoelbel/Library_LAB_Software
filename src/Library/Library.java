@@ -1,26 +1,13 @@
 package Library;
 
-import Library.Medium.Medium;
-import Library.Medium.Status;
-import Library.bib_tex.BibTexParser;
 import Library.database.Server;
 import Library.database.ServerAddressScopes;
 import Library.io.*;
-import Library.persistency.BibTexPersistency;
-import Library.persistency.BinaryPersistency;
-import Library.persistency.HumanReadablePersistency;
 import Library.user_interface.CLI;
 import Library.user_interface.ICLIEndpoint;
 import Library.user_interface.cli_commands.*;
-import Library.utils.DuplicateEntryException;
-import Library.utils.TextUtils;
 
-import java.lang.reflect.Array;
-import java.rmi.ServerError;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.stream.Stream;
 
 /**
  * Main class for managing the library
@@ -30,7 +17,7 @@ import java.util.stream.Stream;
 public class Library {
 
     public static Server server = null;
-    public static final Collection collection = new Collection();
+    public static final Archive collection = new Archive();
 
     public static void main(String[] argv)
     {

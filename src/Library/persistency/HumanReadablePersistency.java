@@ -1,6 +1,6 @@
 package Library.persistency;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Medium.Medium;
 
 import java.io.*;
@@ -18,7 +18,7 @@ public class HumanReadablePersistency implements IPersistency{
      * @throws PercistencyException in case of errors
      */
     @Override
-    public void save(Collection _collection, String _path) throws PercistencyException {
+    public void save(Archive _collection, String _path) throws PercistencyException {
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_path), StandardCharsets.UTF_8)))
         {
             StringBuilder sb = new StringBuilder();
@@ -50,7 +50,7 @@ public class HumanReadablePersistency implements IPersistency{
      * Not implemented
      */
     @Override
-    public Collection load(String _path) throws PercistencyException {
+    public Archive load(String _path) throws PercistencyException {
         throw new UnsupportedOperationException("Load is not implemented for human-readable format");
     }
 }

@@ -1,6 +1,6 @@
 package Library.user_interface.cli_commands;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Library;
 import Library.io.IExceptionUserReadable;
 import Library.io.ProcessOutputBuffer;
@@ -39,7 +39,7 @@ public class LoadBinary implements ICLIEndpoint {
             if(Library.collection.isEmpty())
             {
                 BinaryPersistency b = new BinaryPersistency();
-                Collection c = b.load(params[0]);
+                Archive c = b.load(params[0]);
                 Library.collection.merge(c);
 
                 _out.write("Done", Severity.SUCCESS);
@@ -51,7 +51,7 @@ public class LoadBinary implements ICLIEndpoint {
                 ).strip().equalsIgnoreCase("y"))
                 {
                     BinaryPersistency b = new BinaryPersistency();
-                    Collection c = b.load(params[0]);
+                    Archive c = b.load(params[0]);
                     Library.collection.merge(c);
 
                     _out.write("Done", Severity.SUCCESS);

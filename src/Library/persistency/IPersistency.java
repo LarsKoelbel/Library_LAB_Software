@@ -1,7 +1,6 @@
 package Library.persistency;
 
-import Library.Collection;
-import Library.io.ProcessOutputBuffer;
+import Library.Archive;
 
 /**
  * Interface for saving and loading collection data
@@ -15,7 +14,7 @@ public interface IPersistency
      * @param _path Path of the file
      * @throws PercistencyException in case of errors
      */
-    void save(Collection _collection, String _path) throws PercistencyException;
+    void save(Archive _collection, String _path) throws PercistencyException;
 
     /**
      * Loading a collection from a file
@@ -23,5 +22,5 @@ public interface IPersistency
      * @return Collection#
      * @throws PercistencyException in case of errors
      */
-    Collection load(String _path) throws PercistencyException;
+    Archive load(String _path) throws PercistencyException;
 }

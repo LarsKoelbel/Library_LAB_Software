@@ -1,6 +1,6 @@
 package Library.user_interface.cli_commands;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Library;
 import Library.Medium.Medium;
 import Library.io.ProcessOutputBuffer;
@@ -58,7 +58,7 @@ public class List implements ICLIEndpoint {
                 }
                 if (listDatabase)
                 {
-                    sb.append(Collection.getDataBaseString(m)).append("\n\n");
+                    sb.append(Archive.getDataBaseString(m)).append("\n\n");
                 }
             }
         }else
@@ -73,7 +73,7 @@ public class List implements ICLIEndpoint {
                 }
                 if (listDatabase)
                 {
-                    sb.append("\t").append(Collection.getDataBaseString(m)).append("\n");
+                    sb.append("\t").append(Archive.getDataBaseString(m)).append("\n");
                 }
             }
         }

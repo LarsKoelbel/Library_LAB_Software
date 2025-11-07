@@ -1,6 +1,6 @@
 package Library.user_interface.cli_commands;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Library;
 import Library.io.IExceptionUserReadable;
 import Library.io.ProcessOutputBuffer;
@@ -40,7 +40,7 @@ public class LoadBibtex implements ICLIEndpoint {
             if(Library.collection.isEmpty())
             {
                 BibTexPersistency b = new BibTexPersistency();
-                Collection c = b.load(params[0]);
+                Archive c = b.load(params[0]);
                 Library.collection.merge(c);
 
                 _out.write("Done", Severity.SUCCESS);
@@ -52,7 +52,7 @@ public class LoadBibtex implements ICLIEndpoint {
                 ).strip().equalsIgnoreCase("y"))
                 {
                     BibTexPersistency b = new BibTexPersistency();
-                    Collection c = b.load(params[0]);
+                    Archive c = b.load(params[0]);
                     Library.collection.merge(c);
 
                     _out.write("Done", Severity.SUCCESS);

@@ -1,7 +1,6 @@
 package Library.persistency;
 
-import Library.Collection;
-import Library.Medium.Medium;
+import Library.Archive;
 
 import java.io.*;
 
@@ -18,7 +17,7 @@ public class BinaryPersistency implements IPersistency{
      * @throws PercistencyException in case of error
      */
     @Override
-    public void save(Collection _collection, String _path) throws PercistencyException {
+    public void save(Archive _collection, String _path) throws PercistencyException {
         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(_path))) {
             out.writeObject(_collection);
         }
@@ -36,10 +35,10 @@ public class BinaryPersistency implements IPersistency{
      * @throws PercistencyException in case of errors
      */
     @Override
-    public Collection load(String _path) throws PercistencyException {
+    public Archive load(String _path) throws PercistencyException {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(_path)))
         {
-            Collection c = (Collection) in.readObject();
+            Archive c = (Archive) in.readObject();
             c.sort();
             return c;
         }

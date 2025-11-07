@@ -1,6 +1,6 @@
 package Library.test;
 
-import Library.Collection;
+import Library.Archive;
 import Library.Medium.Medium;
 import Library.database.Server;
 import Library.database.ServerAddressScopes;
@@ -53,7 +53,7 @@ public class Test {
     {
         Server server = new Server("library","database", ServerAddressScopes.DEFAULT.url);
         ProcessOutputBuffer out = new ProcessOutputBuffer("test-server");
-        Collection c = server.getCollectionFromDatabase(out);
+        Archive c = server.getCollectionFromDatabase(out);
 
         System.out.println(out);
 
@@ -76,7 +76,7 @@ public class Test {
      */
     private static void test_Collection()
     {
-        Collection collection = new Collection();
+        Archive collection = new Archive();
 
         ProcessOutputBuffer out = new ProcessOutputBuffer("collection-test");
 
@@ -140,7 +140,7 @@ public class Test {
      */
     private static void test_Persistency()
     {
-        Collection collection = new Collection();
+        Archive collection = new Archive();
 
         ProcessOutputBuffer out = new ProcessOutputBuffer("collection-test");
 
@@ -186,7 +186,7 @@ public class Test {
 
         binaryPersistency.save(collection, "./src/Library/data/objects-test.lib.bin");
 
-        Collection newCollection = binaryPersistency.load("./src/Library/data/objects-test.lib.bin");
+        Archive newCollection = binaryPersistency.load("./src/Library/data/objects-test.lib.bin");
 
         System.out.println("Loaded data from file");
 
@@ -215,7 +215,7 @@ public class Test {
      */
     private static void test_Searching()
     {
-        Collection collection = new Collection();
+        Archive collection = new Archive();
 
         ProcessOutputBuffer out = new ProcessOutputBuffer("collection-test");
 
