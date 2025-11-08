@@ -10,41 +10,41 @@ START_TIME = datetime.datetime.now()
 
 class Database:
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, database):
         self.username = username
         self.password = password
-        self.database = None
+        self.database = database
         self.conn = None
 
-    def connect(self, database):
+    def connect(self):
+        print(f'Connecting to database {self.database} as user {self.username}...')
         self.conn = db.connect(
             host='localhost',
             user=self.username,
             password=self.password,
-            database=database
+            database=self.database
         )
-        self.database = database
-
-    def execute(self, command):
-        if self.database != None:
-            cursor = self.conn.cursor()
-            cursor.execute(command)
-
-            # Check if the command is a SELECT query
-            if command.strip().lower().startswith("select"):
-                rows = cursor.fetchall()
-                return rows
-            else:
-                # Commit non-SELECT changes
-                self.conn.commit()
-                return cursor.rowcount
-        return None
 
     def close(self):
-        if self.conn:
-            self.conn.close()
-            self.database = None
-            self.conn = None
+        print(f'Closing connection to database {self.database}...')
+        self.conn.close()
+        self.conn = None
+
+    def execute(self, command):
+        if self.conn != None:
+            cursor = self.conn.cursor()
+            cursor.execute(command)
+        else:
+            print('\n\nERROR: Database is not connected\n\n')
+
+        # Check if the command is a SELECT query
+        if command.strip().lower().startswith("select"):
+            rows = cursor.fetchall()
+            return rows
+        else:
+            # Commit non-SELECT changes
+            self.conn.commit()
+            return cursor.rowcount
 
 class Message:
     def __init__(self, type, auth, payload):
@@ -178,6 +178,7 @@ class Server:
             if(not vallidate_user(data, self.sessions)):
                 return jsonify({"status": "not permitted"}), 403
 
+            self.database.connect()
             data = self.database.execute("select * from Media")
             print('\n\n', data, '\n\n')
             response = ''
@@ -269,6 +270,8 @@ class Server:
                 "payload": response
             }
 
+            self.database.close()
+
             # Send response as JSON
             return jsonify(response_data)
 
@@ -278,6 +281,9 @@ class Server:
             TRAFIC_TOTAL += 1
             # Get a free id from the server
             data = request.get_json()
+
+            self.database.connect()
+
             self.log("Received from Java: " + str(data))
 
             if(not vallidate_user(data, self.sessions)):
@@ -289,6 +295,8 @@ class Server:
             response_data = {
                 "id": str(id)
             }
+
+            self.database.close()
 
             # Send response as JSON
             return jsonify(response_data)
@@ -313,6 +321,8 @@ class Server:
 
             # Get type
             type = data_base_string[4]
+
+            self.database.connect()
 
             if type == 'BOOK':
                 command = f"INSERT INTO BookData (id, yearOfPublishing, publisher, isbn, author, edition, pages) VALUES({data_base_string[0]}, {data_base_string[5]}, '{data_base_string[6]}', '{data_base_string[7]}', '{data_base_string[8]}', '{data_base_string[19]}', {data_base_string[20]})"
@@ -349,6 +359,8 @@ class Server:
                 "status": "ok"
             }
 
+            self.database.close()
+
             # Send response as JSON
             return jsonify(response_data)
 
@@ -363,6 +375,8 @@ class Server:
                 return jsonify({"status": "not permitted"}), 403
 
             id = data.get('id')
+
+            self.database.connect()
 
             # Get type of media
             type = self.database.execute(f"SELECT type FROM Media WHERE id = {id}")
@@ -394,6 +408,8 @@ class Server:
                 "status": "ok"
             }
 
+            self.database.close()
+
             # Send response as JSON
             return jsonify(response_data)
 
@@ -417,6 +433,8 @@ class Server:
 
             print('\n\n\n', data, '\n\n\n')
 
+            self.database.connect()
+
             # Set the status in the database
             self.database.execute(f"update Media set status = {status} where id = {id}")
             if date:
@@ -424,6 +442,7 @@ class Server:
             else:
                 self.database.execute(f"update Media set dateOfReturn = NULL where id = {id}")
 
+            self.database.close()
 
             response_data = {
                 "status": "ok"
@@ -471,8 +490,7 @@ def find_free_id(database):
 with open('database.passwd', 'r') as file:
     password = file.read().strip()
 
-d = Database('library','12345')
-d.connect('library')
+d = Database('library','12345', 'library')
 
 s = Server(d, password)
 while True:
