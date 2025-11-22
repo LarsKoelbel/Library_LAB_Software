@@ -52,6 +52,8 @@ public class Library {
             cli.registerEndpoint(new ConnectDatabaseServer(), "connect database-server");
             // Disconnect server
             cli.registerEndpoint(new DisconnectDatabaseServer(), "disconnect database-server");
+            // WikiBooks
+            cli.registerEndpoint(new WikiBooks(), "wikibooks");
         }
 
         // Register CLI startup call

@@ -148,6 +148,12 @@ public class Archive implements Iterable<Medium>, Serializable {
      * Add a medium to the collection !!For internal use only. Else use the bibtex interface!!
      * @param medium Medium
      */
+    public void addMedium(Medium medium, ProcessOutputBuffer _out)
+    {
+        medium.setInventoryID(getNextID(_out));
+        this.libList.add(medium);
+    }
+
     private void addMedium(Medium medium)
     {
         this.libList.add(medium);
